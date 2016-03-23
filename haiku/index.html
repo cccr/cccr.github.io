@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>haiku</title>
+</head>
+<body>
+<textarea id="text" rows="3" cols="30"></textarea>
+<div id="res"></div>
+<script>
+    function ready(fn) {
+        if (document.readyState != 'loading'){
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    }
+    var fn = function() {
+        var textarea = document.getElementById("text");
+        var myFunction = function() {
+            count(this);
+        };
+        textarea.addEventListener('keyup', myFunction, false);
+    };
+    var count = function(el) {
+        var arrayOfLines = el.value.match(/[^\r\n]+/g);
+        res.innerHTML = arrayOfLines.map(function(currentValue) {
+            return (currentValue.match(/[аоэиуыеёюя]/g) || []).length;
+        }).join("<br>");
+    };
+    ready(fn);
+</script>
+</body>
+</html>
