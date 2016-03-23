@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dr. Hyder</title>
+<style>
+    code {
+        white-space: pre;
+        word-break: normal;
+        word-wrap: normal;
+    }
+    div.hide {
+        background-color: gray;
+    }
+    @media print
+    {
+        div {
+            page-break-inside: avoid;
+            border-bottom: 2px solid gray;
+            padding-bottom: 4em;
+        }
+        div.hide {
+            display: none;
+        }
+    }
+</style>
+<script>
+    function ready(fn) {
+        if (document.readyState != 'loading'){
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    }
+    var fn = function() {
+        var issues = document.getElementsByTagName("div");
+        var myFunction = function() {
+            hide(this);
+        };
+        for (var i = 0; i < issues.length; i++) {
+            issues[i].addEventListener('click', myFunction, false);
+        }
+    };
+    var className = 'hide';
+    var hide = function(el) {
+        if (el.classList) {
+            el.classList.toggle(className);
+        } else {
+            var classes = el.className.split(' ');
+            var existingIndex = classes.indexOf(className);
+            if (existingIndex >= 0)
+                classes.splice(existingIndex, 1);
+            else
+                classes.push(className);
+            el.className = classes.join(' ');
+        }
+    };
+    ready(fn);
+</script>
+</head>
+<body>
+    <div>
+        <p>What is the result of compilation the following code?</p>
+        <code>   code example 1   </code>
+    </div>
+    <div>
+        <p>What is the result of compilation the following code?</p>
+        <code>   code example 2  </code>
+    </div>
+    <div>
+        <p>What is the result of compilation the following code?</p>
+        <code>   code example 3   </code>
+    </div>    
+</body>
+</html>
