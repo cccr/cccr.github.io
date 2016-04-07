@@ -1,0 +1,144 @@
+<html class=""><head><script src="//assets.codepen.io/assets/editor/live/console_runner-ba402f0a8d1d2ce5a72889b81a71a979.js"></script><style type="text/css"></style><script src="//assets.codepen.io/assets/editor/live/events_runner-902c66a0175801ad4cdf661b3208a97b.js"></script><script src="//assets.codepen.io/assets/editor/live/css_live_reload_init-bad5f8d322020126e7b4287d497c7efe.js"></script><meta charset="UTF-8"><meta name="robots" content="noindex"><link rel="canonical" href="http://codepen.io/tomsoderlund/pen/VYxepE">
+<meta name="viewport" content="width=device-width,user-scalable=0">
+<link rel="stylesheet prefetch" href="//codepen.io/assets/reset/reset.css"><link rel="stylesheet prefetch" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<style class="cp-pen-styles">.element {
+  position: absolute;
+  z-index: 11;
+  background: #6ec8dc;
+  background-size: cover;
+  background-repeat: no-repeat;
+  left: 10%;
+  top: 10%;
+  width: 7rem;
+  height: 7rem;
+  border-radius: 0.3rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.element:hover {
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  z-index: 12;
+}
+
+#elem2 {
+  left: 50%;
+  top: 50%;
+}
+
+#elem3 {
+  left: 75%;
+  top: 75%;
+}
+
+.svg-container {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+svg.line {
+  width: 100%;
+  height: 100%;
+}
+svg.line line, svg.line path {
+  stroke: #f84659;
+  stroke-width: 5px;
+  fill: none;
+  stroke-dasharray: 10 10;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  transition: stroke-dashoffset linear 60s;
+}
+svg.line line.animating, svg.line path.animating {
+  stroke-dashoffset: 10000;
+}
+svg.line line {
+  display: none;
+}
+</style></head><body style="cursor: auto;">
+<div class="element elem1 ui-draggable ui-draggable-handle" id="elem1" style="left: 899.297px; top: -7px;"></div>
+<div class="element elem2 ui-draggable ui-draggable-handle" id="elem2" style="left: 855.5px; top: 259px;"></div>
+<div class="element elem3 ui-draggable ui-draggable-handle" id="elem3" style="left: 1203.25px; top: 185px;"></div>
+
+<div class="svg-container">
+  <svg class="line" id="svg-object">
+    <line x1="955" y1="49" x2="913" y2="315"></line>
+    <path d="M955,49 Q934,49 913,315"></path>
+    <line x1="955" y1="49" x2="1259" y2="241"></line>
+    <path d="M955,49 Q1107,49 1259,241"></path>
+    <line x1="913" y1="315" x2="1259" y2="241"></line>
+    <path d="M913,315 Q1086,315 1259,241"></path>
+  </svg>  
+</div>
+<script src="//assets.codepen.io/assets/common/stopExecutionOnTimeout.js?t=1"></script><script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script src="https://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+<script>var justLog = function (event, ui) {
+    console.log(event.type, event, ui);
+};
+var makeQuadraticBezierPath = function (pos1, pos2) {
+    var centerPos = {
+        x: (pos1.x + pos2.x) / 2,
+        y: (pos1.y + pos2.y) / 2
+    };
+    var pathStr = 'M' + pos1.x + ',' + pos1.y + ' Q' + centerPos.x + ',' + pos1.y + ' ' + pos2.x + ',' + pos2.y;
+    return pathStr;
+};
+var updateElements = function (event, ui) {
+    var elem1 = $('#elem1');
+    var elem2 = $('#elem2');
+    var elem3 = $('#elem3');
+    var line1 = $($('#svg-object').find('line')[0]);
+    var path1 = $($('#svg-object').find('path')[0]);
+    var line2 = $($('#svg-object').find('line')[1]);
+    var path2 = $($('#svg-object').find('path')[1]);
+    var line3 = $($('#svg-object').find('line')[2]);
+    var path3 = $($('#svg-object').find('path')[2]);
+    var pos1 = {
+        x: Math.round(elem1.position().left + elem1.width() / 2),
+        y: Math.round(elem1.position().top + elem1.height() / 2)
+    };
+    var pos2 = {
+        x: Math.round(elem2.position().left + elem2.width() / 2),
+        y: Math.round(elem2.position().top + elem2.height() / 2)
+    };
+    var pos3 = {
+        x: Math.round(elem3.position().left + elem3.width() / 2),
+        y: Math.round(elem3.position().top + elem3.height() / 2)
+    };
+    line1.attr('x1', pos1.x);
+    line1.attr('y1', pos1.y);
+    line1.attr('x2', pos2.x);
+    line1.attr('y2', pos2.y);
+    path1.attr('d', makeQuadraticBezierPath(pos1, pos2));
+    line2.attr('x1', pos1.x);
+    line2.attr('y1', pos1.y);
+    line2.attr('x2', pos3.x);
+    line2.attr('y2', pos3.y);
+    path2.attr('d', makeQuadraticBezierPath(pos1, pos3));
+    line3.attr('x1', pos2.x);
+    line3.attr('y1', pos2.y);
+    line3.attr('x2', pos3.x);
+    line3.attr('y2', pos3.y);
+    path3.attr('d', makeQuadraticBezierPath(pos2, pos3));
+};
+var animateLine = function () {
+    var path1 = $('#svg-object').find('path')[0];
+    path1.addClass('animating');
+    var path2 = $('#svg-object').find('path')[1];
+    path2.addClass('animating');
+    var path3 = $('#svg-object').find('path')[2];
+    path3.addClass('animating');
+};
+$(document).ready(function () {
+    $('.element').draggable({
+        cursor: 'move',
+        start: justLog,
+        drag: updateElements
+    });
+    updateElements();
+    animateLine();
+});
+//# sourceURL=pen.js
+</script>
+</body></html>
