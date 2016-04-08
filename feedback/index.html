@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EPAM</title>
+    <style>
+
+        .rating>li>a.good {
+            background-color: #3a9a2f;
+        }
+
+        .rating>li>a.weak {
+            background-color: #c5aa2a;
+        }
+
+        .rating>li>a.none {
+            background-color: #9a1c15;
+        }
+
+        .rating>li>a.none:hover {
+            background-color: #892b10;
+        }
+
+        li.skill {
+            display: block;
+            height: 3em;
+            line-height: 12px;
+            padding: auto;
+        }
+
+        li.skill * {
+            vertical-align: middle;
+        }
+
+        li.skill>span {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 1rem;
+        }
+
+        * {
+            font-family: "Trebuchet MS";
+            font-size: 1.1rem;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+        .rating {
+            margin: auto;
+            display: inline-block;
+            padding-left: 0;
+            border-radius: 4px;
+        }
+
+        .rating>li {
+            display: inline;
+        }
+
+        .rating>li>a:hover {
+            background-color: #eee;
+        }
+
+        .rating>li>a {
+            position: relative;
+            float: left;
+            padding: 3px 12px;
+            margin-left: -1px;
+            line-height: 1.42857143;
+            color: #337ab7;
+            text-decoration: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+
+        .rating>li:first-child>a {
+            margin-left: 0;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+
+        .rating>li:last-child>a {
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+    </style>
+    <script>
+        function ready(fn) {
+            if (document.readyState != 'loading'){
+                fn();
+            } else {
+                document.addEventListener('DOMContentLoaded', fn);
+            }
+        }
+
+        var loop = function (ts) {
+            var res = '';
+
+            var cnt = arguments[1].length;
+
+            for (var i = 0; i < cnt; i++) {
+                var tsFragment = 0;
+                Array.prototype.slice.call(arguments).slice(1).forEach(function(arg) {
+                    res += ts[tsFragment++];
+                    res += arg[i];
+                });
+                res += ts[tsFragment++];
+            }
+            return res;
+        };
+
+        var javaCore = {title: "Questions on Java Core",
+            items: [
+                "OOP",
+                "Immutable objects (task from JavaTests)",
+                "Singleton  (task from JavaTests)",
+                "String vs StringBuilder and StringBuffer (task from JavaTests)",
+                "Wrapper classes",
+                "Private constructor meaning",
+                "Final class meaning and example",
+                "Enums",
+                "Object class methods",
+                "Hashcode and equals contract",
+                "Collections hierarchy",
+                "TreeMap vs HashMap",
+                "ArrayList vs LinkedList",
+                "Set implementations",
+                "TreeMap and Comparable",
+                "Comparator and Comparable. How to sort lists",
+                "Polymorphism and methods overriding and overloading",
+                "Exception hierarchy. Exceptions and errors",
+                "Deadlock and synchronized",
+                "Deadlock investigation",
+                "POJO meaning",
+                "Java 8",
+                "Memory leaks"
+            ]
+        };
+
+        var fn = function() {
+            document.body.innerHTML+=generateBlock(javaCore);
+            feedbackDownload();
+
+            var skills = document.getElementsByTagName("a");
+            var myFunction = function(e) {
+                switch(e.target.innerHTML) {
+                    case "+": hide(this, "good"); break;
+                    case "+/-": hide(this, "weak"); break;
+                    case "-": hide(this, "none");
+                }
+            };
+
+            for (var i = 0; i < skills.length; i++) {
+                skills[i].addEventListener('click', myFunction, false);
+            }
+
+        };
+
+        var generateBlock = function(data) {
+            return `<div><h2>${data.title}:</h2><ul class="skills">` +
+                   loop`<li class="skill"><ul class="rating"><li><a>+</a></li><li><a>+/-</a></li><li><a>-</a></li></ul><span>${data.items}</span></li>` + `</ul></div>`;
+        };
+
+        function feedbackDownload() {
+
+            var plainFeedbackData = "here we go!";
+            var feedbackDownloadContainer = document.getElementById("feedbackDownloadContainer");
+
+            var feedbackDownloadLink = document.createElement("a");
+            feedbackDownloadLink.setAttribute("href", "data:text/plain," + plainFeedbackData);
+            feedbackDownloadLink.setAttribute("download", "feedback.txt");
+            feedbackDownloadLink.setAttribute("id", "feedbackDownloadLink");
+            feedbackDownloadLink.innerHTML = "download";
+
+            feedbackDownloadContainer.appendChild(feedbackDownloadLink);
+        }
+
+        var hide = function(el, className) {
+            if (el.classList) {
+                el.classList.toggle(className);
+            } else {
+                var classes = el.className.split(' ');
+                var existingIndex = classes.indexOf(className);
+
+                if (existingIndex >= 0)
+                    classes.splice(existingIndex, 1);
+                else
+                    classes.push(className);
+
+                el.className = classes.join(' ');
+            }
+        };
+
+        ready(fn);
+    </script>
+</head>
+<body>
+<div id="feedbackDownloadContainer"></div>
+</body>
+</html>
