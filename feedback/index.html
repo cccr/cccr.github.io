@@ -7,19 +7,27 @@
     <style>
 
         .rating>li>a.good {
-            background-color: #3a9a2f;
+            background-color: #43FF19;
+        }
+
+        .rating>li>a.good:hover {
+            background-color: #96FF6D;
         }
 
         .rating>li>a.weak {
-            background-color: #c5aa2a;
+            background-color: #FFCA1C;
+        }
+
+        .rating>li>a.weak:hover {
+            background-color: #FFD756;
         }
 
         .rating>li>a.none {
-            background-color: #9a1c15;
+            background-color: #FF380F;
         }
 
         .rating>li>a.none:hover {
-            background-color: #892b10;
+            background-color: #FF6749;
         }
 
         li.skill {
@@ -40,7 +48,7 @@
         }
 
         * {
-            font-family: "Trebuchet MS";
+            font-family: "Trebuchet MS",sans-serif;
             font-size: 1.1rem;
         }
 
@@ -86,30 +94,22 @@
         }
     </style>
     <script>
-        function ready(fn) {
-            if (document.readyState != 'loading'){
-                fn();
-            } else {
-                document.addEventListener('DOMContentLoaded', fn);
+
+        var ratingScores = {"good": {
+                "htmlLabel" : "+",
+                "textLabel" : "+"
+            },
+            "weak": {
+                "htmlLabel" : "&plusmn;",
+                "textLabel" : "+/-"
+            },
+            "none": {
+                "htmlLabel" : "-",
+                "textLabel" : "-"
             }
-        }
-
-        var loop = function (ts) {
-            var res = '';
-
-            var cnt = arguments[1].length;
-
-            for (var i = 0; i < cnt; i++) {
-                var tsFragment = 0;
-                Array.prototype.slice.call(arguments).slice(1).forEach(function(arg) {
-                    res += ts[tsFragment++];
-                    res += arg[i];
-                });
-                res += ts[tsFragment++];
-            }
-            return res;
         };
 
+        var skillsData = [javaCore, design];
         var javaCore = {title: "Questions on Java Core",
             items: [
                 "OOP",
@@ -134,46 +134,164 @@
                 "Deadlock investigation",
                 "POJO meaning",
                 "Java 8",
-                "Memory leaks"
+                "Memory leaks",
+                "JNI"
+            ]
+        };
+        var design = {title: "Questions on SQL/ORM/Data model design",
+            items: [
+                "Join types",
+                "normalization vs. denormalization",
+                "JPA Fetch Types",
+                "JPA Cascade Types",
+                "Optimistic and Pessimistic locking",
+                "Criteria API",
+                "Transactions",
+                "ACID",
+                "Isolation layers",
+                "NoSQL types",
+                "Hibernate and JDBS"
             ]
         };
 
+        function ready(fn) {
+            if (document.readyState != "loading"){
+                fn();
+            } else {
+                document.addEventListener("DOMContentLoaded", fn);
+            }
+        }
+
+        var loop = function (ts) {
+            var res = "";
+            var cnt = 1;
+            if (Array.isArray(arguments[1])) {
+                cnt = arguments[1].length;
+            } else {
+                cnt = arguments[2].length;
+            }
+            for (var i = 0; i < cnt; i++) {
+                var tsFragment = 0;
+                Array.prototype.slice.call(arguments).slice(1).forEach(function(arg) {
+                    res += ts[tsFragment++];
+                    if (Array.isArray(arg)) {
+                        res += arg[i];
+                    } else {
+                        res += arg;
+                    }
+                });
+                res += ts[tsFragment++];
+            }
+            return res;
+        };
+
         var fn = function() {
-            document.body.innerHTML+=generateBlock(javaCore);
-            feedbackDownload();
+            var feedback__skills = document.getElementsByClassName("feedback__skills")[0];
 
-            var skills = document.getElementsByTagName("a");
-            var myFunction = function(e) {
-                switch(e.target.innerHTML) {
-                    case "+": hide(this, "good"); break;
-                    case "+/-": hide(this, "weak"); break;
-                    case "-": hide(this, "none");
-                }
-            };
+            feedback__skills.innerHTML+=generateBlock(javaCore);
+            feedback__skills.innerHTML+=generateBlock(design);
 
+            var skills = document.querySelectorAll(".rating a");
             for (var i = 0; i < skills.length; i++) {
-                skills[i].addEventListener('click', myFunction, false);
+                skills[i].addEventListener("click", switchSkillLevel, false);
             }
 
         };
 
-        var generateBlock = function(data) {
-            return `<div><h2>${data.title}:</h2><ul class="skills">` +
-                   loop`<li class="skill"><ul class="rating"><li><a>+</a></li><li><a>+/-</a></li><li><a>-</a></li></ul><span>${data.items}</span></li>` + `</ul></div>`;
+        var switchSkillLevel = function(e) {
+            var clearPreviouslyChosenRate = function () {
+                var parentRatingUL = getParent(e.target, ".rating");
+                var anchorsForRating = parentRatingUL.querySelectorAll("li>a");
+                Array.prototype.forEach.call(anchorsForRating, function (el, i) {
+                    el.className = "";
+                });
+            };
+
+            var setRate = function() {
+                console.log(e.target.innerHTML);
+                switch(e.target.innerHTML) {
+                    case "+": hide(e.target, "good"); break;
+                    case "±": hide(e.target, "weak"); break;
+                    case "-": hide(e.target, "none");
+                }
+            };
+
+            var recalculateOverall = function() {
+                var parentDiv = getParent(e.target, 'div');
+                var overallResults = parentDiv.querySelector(".overallResult");
+
+                var good = parentDiv.querySelectorAll(".good").length;
+                var weak = parentDiv.querySelectorAll(".weak").length;
+                var none = parentDiv.querySelectorAll(".none").length;
+
+                var score = good + weak * 0.5;
+
+                overallResults.innerHTML = "Result:" + score + "/" + (good + weak + none);
+            };
+
+            clearPreviouslyChosenRate();
+            setRate();
+            recalculateOverall();
         };
 
-        function feedbackDownload() {
+        function getParent(el, querySelector) {
+            var p = el.parentNode;
 
-            var plainFeedbackData = "here we go!";
-            var feedbackDownloadContainer = document.getElementById("feedbackDownloadContainer");
+            while (p !== null) {
+                if (p.matches(querySelector)) {
+                    return p;
+                }
+                p = getParent(p, querySelector);
+            }
+            return null;
+        }
 
-            var feedbackDownloadLink = document.createElement("a");
-            feedbackDownloadLink.setAttribute("href", "data:text/plain," + plainFeedbackData);
-            feedbackDownloadLink.setAttribute("download", "feedback.txt");
-            feedbackDownloadLink.setAttribute("id", "feedbackDownloadLink");
-            feedbackDownloadLink.innerHTML = "download";
+        var generateBlock = function(data) {
+            var ratingBlock = generateRatingBlock();
+            return `<div class="skillsScope"><h2>${data.title}:</h2><ul class="skills">` +
+                   loop`<li class="skill">${ratingBlock}<span>${data.items}</span></li>` +
+                   `</ul><h3 class="overallResult"></h3><textarea></textarea></div>`;
+        };
 
-            feedbackDownloadContainer.appendChild(feedbackDownloadLink);
+        var generateRatingBlock = function () {
+            var ratingScoresHtmlLabel = [ratingScores.good.htmlLabel,
+                                         ratingScores.weak.htmlLabel,
+                                         ratingScores.none.htmlLabel];
+            return `<ul class="rating">` + loop`<li><a>${ratingScoresHtmlLabel}</a></li>` + `</ul>`;
+        };
+
+        function generateFeedback() {
+            var resultFeedback = "";
+            var scopes = document.querySelectorAll(".skillsScope");
+
+            Array.prototype.forEach.call(scopes, function (scope, i) {
+                resultFeedback += scope.querySelector("h2").innerHTML;
+                resultFeedback += "\n\n";
+                var skills = scope.querySelectorAll(".skills>li");
+                Array.prototype.forEach.call(skills, function (skill, i) {
+                    var score = "";
+                    var ratings = skill.querySelectorAll("a");
+                    Array.prototype.forEach.call(ratings, function (rating, i) {
+                        if (rating.className != "") score = rating.innerHTML;
+                    });
+                    if (!!score) {
+                        resultFeedback += skill.querySelector("span").innerHTML + " ";
+                        resultFeedback += score + "\n";
+                    }
+                });
+
+                resultFeedback += "\n";
+                resultFeedback += scope.querySelector("h3").innerHTML + "\n";
+                resultFeedback += "Comments: " + scope.querySelector("textarea").value + "\n\n";
+
+            });
+
+            return encodeURIComponent(resultFeedback);
+        }
+
+        function feedbackDownload(link) {
+            var plainFeedbackData = generateFeedback();
+            link.setAttribute("href", "data:text/plain," + plainFeedbackData);
         }
 
         var hide = function(el, className) {
@@ -196,6 +314,23 @@
     </script>
 </head>
 <body>
-<div id="feedbackDownloadContainer"></div>
+<div class="template">
+    <div class="template__current-template"></div>
+    <div class="template__template-loader">
+        <div class="template-loader">
+            <div class="template-loader__link"></div>
+            <div class="template-loader__search-input template-loader__search-input_hidden"></div>
+            <div class="template-loader__suggest-list template-loader__suggest-list_hidden"></div>
+        </div>
+    </div>
+</div>
+<div class="feedback">
+    <div class="feedback__header"></div>
+    <div class="feedback__skills"></div>
+    <div class="feedback__conclusion"></div>
+    <div class="feedback__download-link">
+        <a href="#" target="_blank" onclick="feedbackDownload(this)" id="feedbackDownloadLink">download</a></div>
+    </div>
+</div>
 </body>
 </html>
