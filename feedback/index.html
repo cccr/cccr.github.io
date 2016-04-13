@@ -213,9 +213,9 @@
             var setRate = function() {
                 console.log(e.target.innerHTML);
                 switch(e.target.innerHTML) {
-                    case "+": hide(e.target, "good"); break;
-                    case "±": hide(e.target, "weak"); break;
-                    case "-": hide(e.target, "none");
+                    case ratingScores.good.htmlLabel: hide(e.target, "good"); break;
+                    case ratingScores.weak.htmlLabel: hide(e.target, "weak"); break;
+                    case ratingScores.none.htmlLabel: hide(e.target, "none"); break;
                 }
             };
 
@@ -267,15 +267,15 @@
             var resultFeedback = "";
             var scopes = document.querySelectorAll(".skillsScope");
 
-            Array.prototype.forEach.call(scopes, function (scope, i) {
+            Array.prototype.forEach.call(scopes, function (scope) {
                 resultFeedback += scope.querySelector("h2").innerHTML;
                 resultFeedback += "\n\n";
                 var skills = scope.querySelectorAll(".skills>li");
-                Array.prototype.forEach.call(skills, function (skill, i) {
+                Array.prototype.forEach.call(skills, function (skill) {
                     var score = "";
                     var ratings = skill.querySelectorAll("a");
-                    Array.prototype.forEach.call(ratings, function (rating, i) {
-                        if (rating.className != "") score = rating.innerHTML;
+                    Array.prototype.forEach.call(ratings, function (rating) {
+                        if (rating.className != "") score = ratingScores[rating.className].textLabel;
                     });
                     if (!!score) {
                         resultFeedback += skill.querySelector("span").innerHTML + " ";
