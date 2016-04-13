@@ -210,11 +210,20 @@
                 });
             };
 
+
+            function decodeEntities(s){
+                var str, temp= document.createElement('p');
+                temp.innerHTML= s;
+                str= temp.textContent || temp.innerText;
+                temp=null;
+                return str;
+            }
+
             var setRate = function() {
                 console.log(e.target.innerHTML);
                 switch(e.target.innerHTML) {
                     case ratingScores.good.htmlLabel: hide(e.target, "good"); break;
-                    case ratingScores.weak.htmlLabel: hide(e.target, "weak"); break;
+                    case decodeEntities(ratingScores.weak.htmlLabel): hide(e.target, "weak"); break;
                     case ratingScores.none.htmlLabel: hide(e.target, "none"); break;
                 }
             };
