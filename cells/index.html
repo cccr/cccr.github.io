@@ -1,0 +1,140 @@
+<body>
+<section>
+
+<div>
+<canvas id="canvas" width="400" height="300">
+This text is displayed if your browser does not support HTML5 Canvas.
+</canvas>
+</div>
+</section>
+<script>
+
+var canvas;
+var ctx;
+var x = 75;
+var y = 50;
+var WIDTH = 400;
+var HEIGHT = 300;
+var dragok = false;
+const defaultLineWidth="0.8"
+
+cell = {};
+
+cell.x = x;
+cell.y = y;
+cell.w = 60;
+cell.h = 60;
+cell.lineWidth = defaultLineWidth;
+
+cell.setAndDraw = function(x,y,w,h) {
+  cell.x = x;
+  cell.y = y;
+  cell.w = w;
+  cell.h = h;
+  cell.draw();
+}
+
+cell.draw = function() {
+  ctx.beginPath();
+  ctx.lineWidth=cell.lineWidth;
+  ctx.rect(cell.x,cell.y,cell.w,cell.h);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+cell.mouseDown = function() {
+  corners.isGrowUp = true;
+  corners.stepUp();
+  cell.lineWidth = "2";
+}
+
+cell.mouseUp = function() {
+  corners.isGrowUp = false;
+  corners.stepDown();
+  cell.lineWidth = defaultLineWidth;
+}
+
+corners = {};
+corners.cell = cell;
+corners.point = {x: corners.cell.x + 3, y: corners.cell.y + 3};
+corners.lenght = 10;
+corners.lifetime = 0;
+
+corners.stepUp = function() {
+	if (!corners.isGrowUp) { return; }
+  if (corners.lenght < 100) {
+      setTimeout(function() {corners.stepUp(); }, 1);
+  }
+  corners.lenght++;
+}
+
+corners.stepDown = function() {
+	if (corners.isGrowUp) { return; }
+  if (corners.lenght > 10) {
+      setTimeout(function() {corners.stepDown(); }, 1);
+  }
+  corners.lenght--;
+}
+
+corners.draw = function() {
+  ctx.beginPath();
+  ctx.moveTo(corners.point.x, corners.point.y);
+  ctx.lineTo(corners.point.x + corners.lenght, corners.point.y);
+  ctx.moveTo(corners.point.x, corners.point.y);
+  ctx.lineTo(corners.point.x, corners.point.y + corners.lenght);
+  ctx.closePath();
+  ctx.stroke();
+ 
+}
+
+corners.appear = function() {}
+
+cell.corners = corners;
+
+
+
+function clear() {
+ ctx.clearRect(0, 0, WIDTH, HEIGHT);
+}
+
+function init() {
+ canvas = document.getElementById("canvas");
+ ctx = canvas.getContext("2d");
+ return setInterval(draw, 10);
+}
+
+function draw() {
+ clear();
+ cell.setAndDraw(x, y, 60, 60);
+ corners.draw();
+}
+
+function myMove(e){
+ if (dragok){
+  x = e.pageX - canvas.offsetLeft;
+  y = e.pageY - canvas.offsetTop;
+ }
+}
+
+function myDown(e){
+ if (e.pageX < x + 15 + canvas.offsetLeft && e.pageX > x - 15 +
+ canvas.offsetLeft && e.pageY < y + 15 + canvas.offsetTop &&
+ e.pageY > y -15 + canvas.offsetTop){
+  x = e.pageX - canvas.offsetLeft;
+  y = e.pageY - canvas.offsetTop;
+  dragok = true;
+  canvas.onmousemove = myMove;
+ }
+}
+
+function myUp(){
+ dragok = false;
+ canvas.onmousemove = null;
+}
+
+init();
+canvas.onmousedown = cell.mouseDown;
+canvas.onmouseup = cell.mouseUp;
+
+</script>
+</body>
