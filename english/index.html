@@ -66,10 +66,32 @@
     <script src="jsdiff.js"></script>
     <script>
 
-        var data = {
-            "russian": "Когда программа изменяется, её сложность будет возрастать, при условии, что никто активно не работает против этого.",
-            "english": "When the program is modified its complexity will increase provided that one does not actively work against this."
-        };
+        var data = {};
+
+        function fetchData() {
+            var alertContents = function() {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === 200) {
+                        var arrayOfQuotes = JSON.parse(httpRequest.responseText);
+                        data = arrayOfQuotes[Math.floor(Math.random() * arrayOfQuotes.length)];
+                        fillText();
+                    } else {
+                        alert('There was a problem with the request.');
+                    }
+                }
+            };
+
+            var httpRequest = new XMLHttpRequest();
+
+            if (!httpRequest) {
+                alert('Giving up :( Cannot create an XMLHTTP instance');
+                return false;
+            }
+            httpRequest.onreadystatechange = alertContents;
+            httpRequest.open('GET', 'data.json');
+            httpRequest.send();
+        }
+
 
         var answerButton;
         var answer;
@@ -97,10 +119,8 @@
         };
 
         var fn = function () {
-
             init();
-
-            fillText();
+            fetchData();
 
             var myFunction = function () {
                 hide(answer);
