@@ -42,7 +42,7 @@
             min-width: 2em;
             color: white;
             border: 0;
-            margin: 0.2em;
+            margin: 0.1em;
         }
 
         button#hintButton {
@@ -51,6 +51,10 @@
 
         button#answerButton {
             background-color: rgba(197, 25, 35, 1)
+        }
+
+        div#typedAnswer {
+            background-color: #dddddd;
         }
 
         div#typedAnswer, div#answer, div#originalText {
@@ -66,6 +70,31 @@
     <script src="jsdiff.js"></script>
     <script>
 
+        function createCookie(name,value,days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime()+(days*24*60*60*1000));
+                var expires = "; expires="+date.toGMTString();
+            }
+            else var expires = "";
+            document.cookie = name+"="+value+expires+"; path=/";
+        }
+
+        function readCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        function eraseCookie(name) {
+            createCookie(name,"",-1);
+        }
+
         var data = {};
 
         function fetchData() {
@@ -73,20 +102,39 @@
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === 200) {
                         var arrayOfQuotes = JSON.parse(httpRequest.responseText);
-                        data = arrayOfQuotes[Math.floor(Math.random() * arrayOfQuotes.length)];
+
+                        var arrayOfQuotesIndexes = [];
+                        var i = 0;
+                        while (i < arrayOfQuotes.length) {
+                            arrayOfQuotesIndexes.push(i++)
+                        }
+
+                        var shown = [];
+                        var x = readCookie('shown');
+                        if (x) {
+                            shown = JSON.parse(atob(x));
+                            arrayOfQuotesIndexes = arrayOfQuotesIndexes.filter((i) => !shown.includes(i));
+                        }
+
+                        var index = Math.floor(Math.random() * arrayOfQuotesIndexes.length);
+
+                        shown.push(arrayOfQuotesIndexes[index]);
+                        data = arrayOfQuotes[arrayOfQuotesIndexes[index]];
+
+                        if (shown.length == arrayOfQuotes.length) {
+                            eraseCookie('shown');
+                        } else {
+                            createCookie('shown', btoa(JSON.stringify(shown)), 1 / 2600);
+                        }
+
                         fillText();
                     } else {
-                        alert('There was a problem with the request.');
+                        alert('There was a problem with the request to data.json.');
                     }
                 }
             };
 
             var httpRequest = new XMLHttpRequest();
-
-            if (!httpRequest) {
-                alert('Giving up :( Cannot create an XMLHTTP instance');
-                return false;
-            }
             httpRequest.onreadystatechange = alertContents;
             httpRequest.open('GET', 'data.json');
             httpRequest.send();
@@ -158,8 +206,7 @@
 </div>
 <div class="row">
     <button id="hintButton" class="col-1" onclick="hint()">?</button>
-    <div autocorrect="off"
-         autocapitalize="off"
+    <div spellcheck="false"
          contenteditable="true"
          id="typedAnswer"
          onfocus="this.innerHTML=this.dataset.content?this.dataset.content:''"
