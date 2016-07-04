@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English</title>
+    <meta charset="UTF-8">
+    <style>
+        code {
+            white-space: pre;
+            word-break: normal;
+            word-wrap: normal;
+        }
+
+        div.hide {
+            display: none;
+        }
+
+        .row {
+            display: flex;
+            min-width: 10em;
+            height: 2.3em;
+        }
+
+        .row::after {
+            content: "";
+            clear: both;
+            display: block;
+        }
+
+        .col-1 {
+            flex: 0 0 1em;
+        }
+
+        .col-0 {
+            flex: auto;
+            min-width: 6em;
+        }
+
+        button {
+            width: 2em;
+            min-width: 2em;
+            color: white;
+            border: 0;
+        }
+
+        button#hintButton {
+            background-color: rgba(0, 62, 0, 0.93)
+        }
+
+        button#answerButton {
+            background-color: rgba(197, 25, 35, 1)
+        }
+
+        div#typedAnswer, div#answer, div#originalText {
+            font-size: 2em;
+            font-family: "Trebuchet MS",sans-serif;
+        }
+
+        del {
+            background: #FFE6E6;
+            text-decoration: line-through;
+        }
+    </style>
+    <script src="jsdiff.js"></script>
+    <script>
+
+        var loop = function (strings, ...values) {
+            var result = '';
+
+            for (var i = 0; i < values[0].length; i++) {
+                var splitTemplateFragmentIndex = 0;
+                values.forEach(function(arg) {
+                    result += strings[splitTemplateFragmentIndex++];
+                    result += arg[i];
+                });
+                result += strings[splitTemplateFragmentIndex];
+            }
+            return result;
+        };
+
+        var data = {
+            "russian": "Когда программа изменяется, её сложность будет возрастать, при условии, что никто активно не работает против этого.",
+            "english": "When the program is modified its complexity will increase provided that one does not actively work against this."
+        };
+
+        var answerButton;
+        var answer;
+        var typedAnswer;
+        var originalText;
+
+        function ready(fn) {
+            if (document.readyState != 'loading') {
+                fn();
+            } else {
+                document.addEventListener('DOMContentLoaded', fn);
+            }
+        }
+
+        var init = function () {
+            answerButton = document.getElementById("answerButton");
+            answer = document.getElementById("answer");
+            typedAnswer = document.getElementById("typedAnswer");
+            originalText = document.getElementById("originalText");
+        };
+
+        var fillText = function () {
+            originalText.innerHTML = data.russian;
+            answer.innerHTML = data.english;
+        };
+
+        var fn = function () {
+
+            init();
+
+            fillText();
+
+            var myFunction = function () {
+                hide(answer);
+            };
+            answerButton.addEventListener('click', myFunction, false);
+        };
+
+        var className = 'hide';
+
+        var hide = function (el) {
+            if (el.classList) {
+                el.classList.toggle(className);
+            } else {
+                var classes = el.className.split(' ');
+                var existingIndex = classes.indexOf(className);
+                if (existingIndex >= 0) {
+                    classes.splice(existingIndex, 1);
+                } else {
+                    classes.push(className);
+                }
+                el.className = classes.join(' ');
+            }
+        };
+
+        var hint = function () {
+            var diffString3 = diffString(typedAnswer.dataset.content, answer.innerHTML);
+            typedAnswer.innerHTML = diffString3;
+        };
+
+        ready(fn);
+    </script>
+</head>
+<body>
+<div class="row">
+    <div id="originalText"></div>
+</div>
+<div class="row">
+    <button id="hintButton" class="col-1" onclick="hint()">?</button>
+    <div contenteditable="true" id="typedAnswer" onfocus="this.innerHTML=this.dataset.content?this.dataset.content:''" onkeyup="this.dataset.content=this.innerHTML" class="col-0"></div>
+</div>
+<div class="row">
+    <button id="answerButton" class="col-1">!</button>
+    <div id="answer" class="hide col-0"></div>
+</div>
+</body>
+</html>
