@@ -55,7 +55,7 @@
 
         div#typedAnswer, div#answer, div#originalText {
             font-size: 2em;
-            font-family: "Trebuchet MS",sans-serif;
+            font-family: "Trebuchet MS", sans-serif;
         }
 
         del {
@@ -138,7 +138,12 @@
 </div>
 <div class="row">
     <button id="hintButton" class="col-1" onclick="hint()">?</button>
-    <div contenteditable="true" id="typedAnswer" onfocus="this.innerHTML=this.dataset.content?this.dataset.content:''" onkeyup="this.dataset.content=this.innerHTML" class="col-0"></div>
+    <div autocorrect="off"
+         autocapitalize="off"
+         contenteditable="true"
+         id="typedAnswer"
+         onfocus="this.innerHTML=this.dataset.content?this.dataset.content:''"
+         onkeyup="this.dataset.content=this.innerHTML" class="col-0"></div>
 </div>
 <div class="row">
     <button id="answerButton" class="col-1">!</button>
