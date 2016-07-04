@@ -70,35 +70,37 @@
     <script src="jsdiff.js"></script>
     <script>
 
-        function createCookie(name,value,days) {
+        function createCookie(name, value, days) {
             if (days) {
                 var date = new Date();
-                date.setTime(date.getTime()+(days*24*60*60*1000));
-                var expires = "; expires="+date.toUTCString();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toUTCString();
             }
-            else var expires = "";
-            document.cookie = name+"="+value+expires+"; path=/";
+            else {
+                var expires = "";
+            }
+            document.cookie = name + "=" + value + expires + "; path=/";
         }
 
         function readCookie(name) {
             var nameEQ = name + "=";
             var ca = document.cookie.split(';');
-            for(var i=0;i < ca.length;i++) {
+            for (var i = 0; i < ca.length; i++) {
                 var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
             }
             return null;
         }
 
         function eraseCookie(name) {
-            createCookie(name,"",-1);
+            createCookie(name, "", -1);
         }
 
         var data = {};
 
         function fetchData() {
-            var alertContents = function() {
+            var alertContents = function () {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === 200) {
                         var arrayOfQuotes = JSON.parse(httpRequest.responseText);
@@ -113,7 +115,9 @@
                         var x = readCookie('shown');
                         if (x) {
                             shown = JSON.parse(atob(x));
-                            arrayOfQuotesIndexes = arrayOfQuotesIndexes.filter((i) => !shown.includes(i));
+                            arrayOfQuotesIndexes = arrayOfQuotesIndexes.filter(function (i) {
+                                return shown.indexOf(i) == -1;
+                            });
                         }
 
                         var index = Math.floor(Math.random() * arrayOfQuotesIndexes.length);
@@ -139,7 +143,6 @@
             httpRequest.open('GET', 'data.json');
             httpRequest.send();
         }
-
 
         var answerButton;
         var answer;
