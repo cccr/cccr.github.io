@@ -3,206 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English</title>
+    <title>&#331;</title>
     <meta charset="UTF-8">
-    <style>
-        code {
-            white-space: pre;
-            word-break: normal;
-            word-wrap: normal;
-        }
-
-        div.hide {
-            display: none;
-        }
-
-        .row {
-            display: flex;
-            min-width: 10em;
-            min-height: 1.6em;
-        }
-
-        .row::after {
-            content: "";
-            clear: both;
-            display: block;
-        }
-
-        .col-1 {
-            flex: 0 0 1em;
-        }
-
-        .col-0 {
-            flex: auto;
-            min-width: 6em;
-        }
-
-        button {
-            font-size: 1.5em;
-            width: 1em;
-            min-width: 1em;
-            color: white;
-            border: 0;
-            margin: 0.1em;
-        }
-
-        button#hintButton {
-            background-color: rgba(0, 62, 0, 0.93)
-        }
-
-        button#answerButton {
-            background-color: rgba(197, 25, 35, 1)
-        }
-
-        div#typedAnswer {
-            border: 1px dotted #EEEFEE;
-        }
-
-        div#typedAnswer, div#answer, div#originalText {
-            font-size: 1.5em;
-            font-family: "Trebuchet MS", sans-serif;
-        }
-
-        del {
-            background: #FFE6E6;
-            text-decoration: line-through;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css" type="text/css">
     <script src="jsdiff.js"></script>
-    <script>
-
-        function createCookie(name, value, days) {
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                var expires = "; expires=" + date.toUTCString();
-            }
-            else {
-                var expires = "";
-            }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-
-        function readCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        function eraseCookie(name) {
-            createCookie(name, "", -1);
-        }
-
-        var data = {};
-
-        function fetchData() {
-            var alertContents = function () {
-                if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                    if (httpRequest.status === 200) {
-                        var arrayOfQuotes = JSON.parse(httpRequest.responseText);
-
-                        var arrayOfQuotesIndexes = [];
-                        var i = 0;
-                        while (i < arrayOfQuotes.length) {
-                            arrayOfQuotesIndexes.push(i++)
-                        }
-
-                        var shown = [];
-                        var x = readCookie('shown');
-                        if (x) {
-                            shown = JSON.parse(atob(x));
-                            arrayOfQuotesIndexes = arrayOfQuotesIndexes.filter(function (i) {
-                                return shown.indexOf(i) == -1;
-                            });
-                        }
-
-                        var index = Math.floor(Math.random() * arrayOfQuotesIndexes.length);
-
-                        shown.push(arrayOfQuotesIndexes[index]);
-                        data = arrayOfQuotes[arrayOfQuotesIndexes[index]];
-
-                        if (shown.length == arrayOfQuotes.length) {
-                            eraseCookie('shown');
-                        } else {
-                            createCookie('shown', btoa(JSON.stringify(shown)), 1 / 144);
-                        }
-
-                        fillText();
-                    } else {
-                        alert('There was a problem with the request to data.json.');
-                    }
-                }
-            };
-
-            var httpRequest = new XMLHttpRequest();
-            httpRequest.onreadystatechange = alertContents;
-            httpRequest.open('GET', 'data.json');
-            httpRequest.send();
-        }
-
-        var answerButton;
-        var answer;
-        var typedAnswer;
-        var originalText;
-
-        function ready(fn) {
-            if (document.readyState != 'loading') {
-                fn();
-            } else {
-                document.addEventListener('DOMContentLoaded', fn);
-            }
-        }
-
-        var init = function () {
-            answerButton = document.getElementById("answerButton");
-            answer = document.getElementById("answer");
-            typedAnswer = document.getElementById("typedAnswer");
-            originalText = document.getElementById("originalText");
-        };
-
-        var fillText = function () {
-            originalText.innerHTML = data.russian;
-            answer.innerHTML = data.english;
-        };
-
-        var fn = function () {
-            init();
-            fetchData();
-
-            var myFunction = function () {
-                hide(answer);
-            };
-            answerButton.addEventListener('click', myFunction, false);
-        };
-
-        var className = 'hide';
-
-        var hide = function (el) {
-            if (el.classList) {
-                el.classList.toggle(className);
-            } else {
-                var classes = el.className.split(' ');
-                var existingIndex = classes.indexOf(className);
-                if (existingIndex >= 0) {
-                    classes.splice(existingIndex, 1);
-                } else {
-                    classes.push(className);
-                }
-                el.className = classes.join(' ');
-            }
-        };
-
-        var hint = function () {
-            typedAnswer.innerHTML = diffString(typedAnswer.dataset.content, answer.innerHTML);
-        };
-
-        ready(fn);
-    </script>
+    <script src="script.js"></script>
 </head>
 <body>
 <div class="row">
@@ -220,5 +25,9 @@
     <button id="answerButton" class="col-1">!</button>
     <div id="answer" class="hide col-0"></div>
 </div>
+<div class="row">
+    <button id="eraseCookie" class="col-1" onclick="eraseCookie('shown'); location.reload(true); ">&#10006;</button>
+</div>
+<div id="thumbsUp" class="hide">&#128077;</div>
 </body>
 </html>
