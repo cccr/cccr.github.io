@@ -40,19 +40,23 @@ button {
 }
 
 button#hintButton {
-    background-color: rgba(0, 62, 0, 1)
+    background-color: rgba(67, 160, 71, 1)
 }
 
 button#answerButton {
-    background-color: rgba(197, 25, 35, 1)
+    background-color: rgba(229, 57, 53, 1)
+}
+
+button#eraseCookie {
+    background-color: rgba(55, 71, 79, 1)
 }
 
 div#typedAnswer {
-    border: 1px dotted rgba(0, 62, 0, 0.2);
+    border: 1px dotted rgba(67, 160, 71, 0.2);
 }
 
 div#answer {
-    border: 1px dotted rgba(197, 25, 35, 0.56);
+    border: 1px dotted rgba(229, 57, 53, 0.2);
     border-top-width: 0;
 }
 
