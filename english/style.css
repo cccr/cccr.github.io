@@ -13,6 +13,10 @@
     align-items: flex-start;
 }
 
+.rowStretched {
+    align-items: stretch !important;
+}
+
 .row::after {
     content: "";
     clear: both;
@@ -80,7 +84,7 @@ button#changeBlock {
 div#typedAnswer {
     border: 1px dotted rgba(67, 160, 71, 0.2);
     margin-top: 2px;
-    height: 1.42em !important;
+    min-height: 1.42em !important;
     line-height: 1.4em;
 }
 

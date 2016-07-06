@@ -13,7 +13,7 @@
 <div class="row">
     <div id="originalText"></div>
 </div>
-<div class="row">
+<div class="row rowStretched">
     <button id="hintButton" class="col-1" onclick="hint()">?</button>
     <div spellcheck="false"
          contenteditable="true"
@@ -21,7 +21,7 @@
          onfocus="this.innerHTML=this.dataset.content?this.dataset.content:''"
          onkeyup="this.dataset.content=this.innerHTML" class="col-0"></div>
 </div>
-<div class="row">
+<div class="row rowStretched">
     <button id="answerButton" class="col-1">!</button>
     <div id="answer" class="hide col-0"></div>
 </div>
