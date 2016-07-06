@@ -120,11 +120,12 @@ function chooseBlock() {
         availableBlocks.appendChild(liEl);
     };
 
-    toggle(availableBlocks);
-
     if (!availableBlocks.firstChild) {
         blocks.forEach(createLiElement);
     }
+
+    toggle(availableBlocks);
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 function changeBlock() {
