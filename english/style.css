@@ -51,6 +51,14 @@ button#eraseCookie {
     background-color: rgba(55, 71, 79, 1)
 }
 
+button#nextQuestion {
+    background-color: rgba(41,182,246 ,1)
+}
+
+button#changeBlock {
+    background-color: rgba(230,81,0 ,1)
+}
+
 div#typedAnswer {
     border: 1px dotted rgba(67, 160, 71, 0.2);
 }

@@ -31,62 +31,75 @@ function eraseCookie(name) {
 var data = {};
 var blocks = [];
 var currentBlock = readCookie("block");
+var fullData = "";
 
 function getRandomElement(arr) {
     var index = Math.floor(Math.random() * arr.length);
     return arr[index];
 }
 
+function alertContents() {
+
+    if (!fullData) throw new Error("fullData is null");
+
+    blocks = Object.keys(fullData);
+
+    if (!currentBlock) {
+        currentBlock = getRandomElement(blocks);
+        createCookie("block", currentBlock);
+    }
+
+    var arrayOfQuotes = fullData[currentBlock];
+
+    var arrayOfQuotesIndexes = [];
+    var i = 0;
+    while (i < arrayOfQuotes.length) {
+        arrayOfQuotesIndexes.push(i++)
+    }
+
+    var shown = [];
+    var x = readCookie("shown");
+    if (x) {
+        shown = JSON.parse(atob(x));
+        arrayOfQuotesIndexes = arrayOfQuotesIndexes.filter(function (i) {
+            return shown.indexOf(i) == -1;
+        });
+    }
+
+    var index;
+
+    if (random) {
+        var randomIndex = getRandomElement(arrayOfQuotesIndexes);
+        shown.push(randomIndex);
+        data = arrayOfQuotes[randomIndex];
+    } else {
+        index = shown.length;
+        shown.push(index);
+        data = arrayOfQuotes[index];
+    }
+
+
+    if (shown.length == arrayOfQuotes.length) {
+        eraseCookie("shown");
+    } else {
+        createCookie("shown", btoa(JSON.stringify(shown)), 1 / 144);
+    }
+
+    fillText();
+}
+
 function fetchData() {
-    var alertContents = function () {
+
+    if (fullData) {
+        alertContents(fullData);
+        return;
+    }
+
+    var getResponse = function () {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
-
-                var fullData = JSON.parse(httpRequest.responseText);
-                blocks = Object.keys(fullData);
-
-                if (!currentBlock) {
-                    currentBlock = getRandomElement(blocks);
-                    createCookie("block", currentBlock);
-                }
-
-                var arrayOfQuotes = fullData[currentBlock];
-
-                var arrayOfQuotesIndexes = [];
-                var i = 0;
-                while (i < arrayOfQuotes.length) {
-                    arrayOfQuotesIndexes.push(i++)
-                }
-
-                var shown = [];
-                var x = readCookie("shown");
-                if (x) {
-                    shown = JSON.parse(atob(x));
-                    arrayOfQuotesIndexes = arrayOfQuotesIndexes.filter(function (i) {
-                        return shown.indexOf(i) == -1;
-                    });
-                }
-
-                var index;
-
-                if (random) {
-                    var randomIndex = getRandomElement(arrayOfQuotesIndexes);
-                    shown.push(randomIndex);
-                    data = arrayOfQuotes[randomIndex];
-                } else {
-                    index = shown.length;
-                    shown.push(index);
-                    data = arrayOfQuotes[index];
-                }
-
-
-                if (shown.length == arrayOfQuotes.length) {
-                    eraseCookie("shown");
-                } else {
-                    createCookie("shown", btoa(JSON.stringify(shown)), 1 / 144);
-                }
-
-                fillText();
+                fullData = JSON.parse(httpRequest.responseText);
+                alertContents();
             } else {
                 alert("There was a problem with the request to data.json.");
             }
@@ -94,7 +107,7 @@ function fetchData() {
     };
 
     var httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = alertContents;
+    httpRequest.onreadystatechange = getResponse;
     httpRequest.open("GET", "data.json");
     httpRequest.send();
 }
