@@ -15,10 +15,10 @@ function createCookie(name, value, days) {
 
 function readCookie(name) {
     var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
+    var ca = document.cookie.split(";");
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        while (c.charAt(0) == " ") c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
@@ -29,12 +29,28 @@ function eraseCookie(name) {
 }
 
 var data = {};
+var blocks = [];
+var currentBlock = readCookie("block");
+
+function getRandomElement(arr) {
+    var index = Math.floor(Math.random() * arr.length);
+    return arr[index];
+}
 
 function fetchData() {
     var alertContents = function () {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
-                var arrayOfQuotes = JSON.parse(httpRequest.responseText);
+
+                var fullData = JSON.parse(httpRequest.responseText);
+                blocks = Object.keys(fullData);
+
+                if (!currentBlock) {
+                    currentBlock = getRandomElement(blocks);
+                    createCookie("block", currentBlock);
+                }
+
+                var arrayOfQuotes = fullData[currentBlock];
 
                 var arrayOfQuotesIndexes = [];
                 var i = 0;
@@ -43,7 +59,7 @@ function fetchData() {
                 }
 
                 var shown = [];
-                var x = readCookie('shown');
+                var x = readCookie("shown");
                 if (x) {
                     shown = JSON.parse(atob(x));
                     arrayOfQuotesIndexes = arrayOfQuotesIndexes.filter(function (i) {
@@ -54,9 +70,9 @@ function fetchData() {
                 var index;
 
                 if (random) {
-                    index = Math.floor(Math.random() * arrayOfQuotesIndexes.length);
-                    shown.push(arrayOfQuotesIndexes[index]);
-                    data = arrayOfQuotes[arrayOfQuotesIndexes[index]];
+                    var randomIndex = getRandomElement(arrayOfQuotesIndexes);
+                    shown.push(randomIndex);
+                    data = arrayOfQuotes[randomIndex];
                 } else {
                     index = shown.length;
                     shown.push(index);
@@ -65,22 +81,29 @@ function fetchData() {
 
 
                 if (shown.length == arrayOfQuotes.length) {
-                    eraseCookie('shown');
+                    eraseCookie("shown");
                 } else {
-                    createCookie('shown', btoa(JSON.stringify(shown)), 1 / 144);
+                    createCookie("shown", btoa(JSON.stringify(shown)), 1 / 144);
                 }
 
                 fillText();
             } else {
-                alert('There was a problem with the request to data.json.');
+                alert("There was a problem with the request to data.json.");
             }
         }
     };
 
     var httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = alertContents;
-    httpRequest.open('GET', 'self.json');
+    httpRequest.open("GET", "data.json");
     httpRequest.send();
+}
+
+function changeBlock() {
+    eraseCookie("block");
+    currentBlock = "";
+    eraseCookie("shown");
+    fetchData();
 }
 
 var answerButton;
@@ -90,10 +113,10 @@ var originalText;
 var thumbsUp;
 
 function ready(fn) {
-    if (document.readyState != 'loading') {
+    if (document.readyState != "loading") {
         fn();
     } else {
-        document.addEventListener('DOMContentLoaded', fn);
+        document.addEventListener("DOMContentLoaded", fn);
     }
 }
 
@@ -117,23 +140,23 @@ var fn = function () {
     var hideFunction = function () {
         toggle(answer);
     };
-    answerButton.addEventListener('click', hideFunction, false);
+    answerButton.addEventListener("click", hideFunction, false);
 };
 
-var className = 'hide';
+var className = "hide";
 
 var toggle = function (el) {
     if (el.classList) {
         el.classList.toggle(className);
     } else {
-        var classes = el.className.split(' ');
+        var classes = el.className.split(" ");
         var existingIndex = classes.indexOf(className);
         if (existingIndex >= 0) {
             classes.splice(existingIndex, 1);
         } else {
             classes.push(className);
         }
-        el.className = classes.join(' ');
+        el.className = classes.join(" ");
     }
 };
 
