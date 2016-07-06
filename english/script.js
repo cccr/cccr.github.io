@@ -112,11 +112,27 @@ function fetchData() {
     httpRequest.send();
 }
 
+function chooseBlock() {
+    var createLiElement = function(text) {
+        var liEl = document.createElement("li");
+        liEl.appendChild(document.createTextNode(text));
+        liEl.addEventListener("click", changeBlock, false);
+        availableBlocks.appendChild(liEl);
+    };
+
+    toggle(availableBlocks);
+
+    if (!availableBlocks.firstChild) {
+        blocks.forEach(createLiElement);
+    }
+}
+
 function changeBlock() {
-    eraseCookie("block");
-    currentBlock = "";
+    createCookie("block", this.innerHTML);
+    currentBlock = this.innerHTML;
     eraseCookie("shown");
     fetchData();
+    toggle(availableBlocks);
 }
 
 var answerButton;
@@ -124,6 +140,7 @@ var answer;
 var typedAnswer;
 var originalText;
 var thumbsUp;
+var availableBlocks;
 
 function ready(fn) {
     if (document.readyState != "loading") {
@@ -139,6 +156,7 @@ var init = function () {
     typedAnswer = document.getElementById("typedAnswer");
     originalText = document.getElementById("originalText");
     thumbsUp = document.getElementById("thumbsUp");
+    availableBlocks = document.getElementById("availableBlocks");
 };
 
 var fillText = function () {
