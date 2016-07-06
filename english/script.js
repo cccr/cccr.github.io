@@ -90,6 +90,9 @@ function alertContents() {
 
 function fetchData() {
 
+    typedAnswer.innerHTML = "";
+    typedAnswer.dataset.content = "";
+
     if (fullData) {
         alertContents(fullData);
         return;
