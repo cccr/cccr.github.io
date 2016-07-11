@@ -139,7 +139,23 @@ var toggle = function (el) {
 
 var hint = function () {
     if (typedAnswer.dataset.content !== answer.innerHTML) {
-        typedAnswer.innerHTML = diffString(typedAnswer.dataset.content, answer.innerHTML);
+
+        var diff = JsDiff.diffChars(typedAnswer.dataset.content, answer.innerHTML),
+            fragment = document.createDocumentFragment();
+
+        diff.forEach(function(part){
+            // green for additions, red for deletions
+            // grey for common parts
+            color = part.added ? 'green' :
+                    part.removed ? 'red' : 'grey';
+            span = document.createElement('span');
+            span.style.color = color;
+            span.appendChild(document.createTextNode(part.value));
+            fragment.appendChild(span);
+        });
+
+
+        typedAnswer.innerHTML = fragment;
     } else {
         toggle(thumbsUp);
         setTimeout(function(){ toggle(thumbsUp) }, 1000);
