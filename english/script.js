@@ -196,27 +196,39 @@ var toggle = function (el) {
 };
 
 var hint = function () {
-    if (typedAnswer.dataset.content !== answer.innerHTML) {
+    if (typedAnswer.dataset.content && typedAnswer.dataset.content !== answer.innerHTML) {
 
-        var diff = JsDiff.diffChars(typedAnswer.dataset.content, answer.innerHTML),
-            fragment = document.createDocumentFragment();
+        var diff = JsDiff.diffWords(typedAnswer.dataset.content, answer.innerHTML);
+        var fragment = document.createDocumentFragment();
+        for (var i=0; i < diff.length; i++) {
+            if (diff[i].added && diff[i + 1] && diff[i + 1].removed) {
+                var swap = diff[i];
+                diff[i] = diff[i + 1];
+                diff[i + 1] = swap;
+            }
 
-        diff.forEach(function(part){
-            // green for additions, red for deletions
-            // grey for common parts
-            color = part.added ? 'green' :
-                    part.removed ? 'red' : 'grey';
-            span = document.createElement('span');
-            span.style.color = color;
-            span.appendChild(document.createTextNode(part.value));
-            fragment.appendChild(span);
-        });
+            var node;
+            if (diff[i].removed && diff[i].value != '&nbsp;') {
+                node = document.createElement('del');
+                node.appendChild(document.createTextNode(diff[i].value));
+            } else if (diff[i].added) {
+                node = document.createElement('ins');
+                node.appendChild(document.createTextNode('?'));
+            } else {
+                node = document.createTextNode(diff[i].value);
+            }
+            fragment.appendChild(node);
+        }
 
-
-        typedAnswer.innerHTML = fragment;
+        typedAnswer.textContent = '';
+        typedAnswer.appendChild(fragment);
     } else {
-        toggle(thumbsUp);
-        setTimeout(function(){ toggle(thumbsUp) }, 1000);
+        if (typedAnswer.dataset.content) {
+            toggle(thumbsUp);
+            setTimeout(function () {
+                toggle(thumbsUp)
+            }, 1000);
+        }
     }
 };
 
