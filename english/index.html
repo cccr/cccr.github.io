@@ -15,11 +15,9 @@
 </div>
 <div class="row rowStretched">
     <button id="hintButton" class="col-1" onclick="hint()">?</button>
-    <div spellcheck="false"
-         contenteditable="true"
-         id="typedAnswer"
+    <div spellcheck="false" contenteditable="true" id="typedAnswer"
          onfocus="this.innerHTML=this.dataset.content?this.dataset.content:''"
-         onkeyup="this.dataset.content=this.innerHTML;" class="col-0"></div>
+         onkeyup="this.dataset.content=this.innerHTML.replace(/(<([^>]+)>)/ig,'');" class="col-0"></div>
 </div>
 <div class="row rowStretched">
     <button id="answerButton" class="col-1">!</button>
