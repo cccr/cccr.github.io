@@ -18,8 +18,8 @@
     <div spellcheck="false"
          contenteditable="true"
          id="typedAnswer"
-         onfocus="this.textContent=this.dataset.content?this.dataset.content:''"
-         onkeyup="this.textContent=this.textContent.replace(/(<([^>]+)>)/ig,''); this.dataset.content=this.textContent;" class="col-0"></div>
+         onfocus="this.innerHTML=this.dataset.content?this.dataset.content:''"
+         onkeyup="this.dataset.content=this.innerHTML;" class="col-0"></div>
 </div>
 <div class="row rowStretched">
     <button id="answerButton" class="col-1">!</button>
