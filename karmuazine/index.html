@@ -3,31 +3,480 @@
 <head lang="en">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:image" content="http://halfofpoint.github.io/karmuazine.com/images/header.jpg" />
+    <meta property="og:image" content="http://halfofpoint.github.io/karmuazine.com/images/header.jpg"/>
     <title>karmuazine</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <style>
+        * {
+            font-family: "Source Sans Pro", Helvetica, sans-serif;
+        }
+
         body {
             margin: 0;
+            background-color: #e00000; /* fallback color if gradients are not supported */
+            background-image: -webkit-linear-gradient(right, #e00000, #df0001); /* For Chrome 25 and Safari 6, iOS 6.1, Android 4.3 */
+            background-image: -moz-linear-gradient(right, #e00000, #df0001); /* For Firefox (3.6 to 15) */
+            background-image: -o-linear-gradient(right, #e00000, #df0001); /* For old Opera (11.1 to 12.0) */
+            background-image: linear-gradient(to right, #e00000, #df0001); /* Standard syntax; must be last */
         }
+
+        .image {
+            position: relative;
+            width: 100%; /* for IE 6 */
+        }
+
         img {
             width: 100%;
             height: auto;
+            display: block;
+        }
+
+        .image h1 {
+            position: absolute;
+            top: 0;
+            left: 1em;
+            width: 100%;
+            margin: 0;
+        }
+
+
+        /* Item */
+
+        .item {
+            padding: 3em 3em 1em 3em;
+            background-color: #ffffff;
+            border-radius: 4px;
+            text-align: center;
+            flex: 1 1 200px;
+        }
+
+        .item header {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            margin: -3em 0 3em -3em;
+            width: calc(100% + 6em);
+            height: 15em;
+            display: -moz-flex;
+            display: -webkit-flex;
+            display: -ms-flex;
+            display: flex;
+            -moz-align-items: center;
+            -webkit-align-items: center;
+            -ms-align-items: center;
+            align-items: center;
+            -moz-justify-content: center;
+            -webkit-justify-content: center;
+            -ms-justify-content: center;
+            justify-content: center;
+            background-color: #444;
+            color: rgba(255, 255, 255, 0.75);
+            position: relative;
+            overflow: hidden;
+
+        }
+
+        .item header input, .item header select, .item header textarea {
+            color: #ffffff;
+        }
+
+        .item header a {
+            color: inherit;
+        }
+
+        .item header a:hover {
+            color: #EF6480 !important;
+        }
+
+        .item header strong, .item header b {
+            color: #ffffff;
+        }
+
+        .item header h1, .item header h2, .item header h3, .item header h4, .item header h5, .item header h6 {
+            color: #ffffff;
+        }
+
+        .item header blockquote {
+            border-left-color: #ffffff;
+        }
+
+        .item header code {
+            background: rgba(255, 255, 255, 0.075);
+            border-color: #ffffff;
+        }
+
+        .item header hr {
+            border-bottom-color: #ffffff;
+        }
+
+        .item header a {
+            -moz-transition: -moz-transform 0.2s ease;
+            -webkit-transition: -webkit-transform 0.2s ease;
+            -ms-transition: -ms-transform 0.2s ease;
+            transition: transform 0.2s ease;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .item header a:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.25);
+        }
+
+        .item header:hover a {
+            -moz-transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            -ms-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+
+        .item header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .item header h3 {
+            margin: 0;
+            -moz-pointer-events: none;
+            -webkit-pointer-events: none;
+            -ms-pointer-events: none;
+            pointer-events: none;
+        }
+
+        .items {
+            display: -moz-flex;
+            display: -webkit-flex;
+            display: -ms-flex;
+            display: flex;
+            -moz-flex-wrap: wrap;
+            -webkit-flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            width: calc(100% + 2em);
+            margin: -2em 0 0 -2em;
+        }
+
+        .items .item {
+            margin: 2em 0 0 2em;
+            width: calc(50% - 2em);
+        }
+
+
+
+        /* Wrapper */
+
+        #wrapper {
+            width: 64em;
+            margin: 0 auto;
+            max-width: calc(100% - 4em);
+            padding: 4em 0 2em 0;
+        }
+
+        #wrapper > .main {
+            margin-bottom: 4em;
+        }
+
+        @media screen and (max-width: 980px) {
+
+            #wrapper {
+                padding: 2em 0 2em 0;
+            }
+
+            #wrapper > .main {
+                margin-bottom: 2em;
+            }
+
+        }
+
+        @media screen and (max-width: 736px) {
+
+            #wrapper {
+                max-width: calc(100% - 2em);
+                padding: 1em 0 0.1em 0;
+            }
+
+            #wrapper > .main {
+                margin-bottom: 1em;
+            }
+
+        }
+
+        /* Button */
+
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"],
+        button,
+        .button {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            -ms-appearance: none;
+            appearance: none;
+            -moz-transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            -webkit-transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            -ms-transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            border-radius: 4px;
+            border: 0;
+            cursor: pointer;
+            display: inline-block;
+            font-weight: 400;
+            height: 3.5em;
+            line-height: 3.5em;
+            padding: 0 2em 0 2.375em;
+            text-align: center;
+            text-decoration: none;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.325em;
+            font-size: 0.725em;
+        }
+
+        input[type="submit"].icon:before,
+        input[type="reset"].icon:before,
+        input[type="button"].icon:before,
+        button.icon:before,
+        .button.icon:before {
+            margin-right: 0.5em;
+        }
+
+        input[type="submit"].fit,
+        input[type="reset"].fit,
+        input[type="button"].fit,
+        button.fit,
+        .button.fit {
+            display: block;
+            margin: 0 0 1em 0;
+            width: 100%;
+        }
+
+        input[type="submit"].big,
+        input[type="reset"].big,
+        input[type="button"].big,
+        button.big,
+        .button.big {
+            font-size: 0.8em;
+            padding: 0 2.5em 0 2.875em;
+            height: 3.75em;
+            line-height: 3.75em;
+        }
+
+        input[type="submit"].disabled, input[type="submit"]:disabled,
+        input[type="reset"].disabled,
+        input[type="reset"]:disabled,
+        input[type="button"].disabled,
+        input[type="button"]:disabled,
+        button.disabled,
+        button:disabled,
+        .button.disabled,
+        .button:disabled {
+            -moz-pointer-events: none;
+            -webkit-pointer-events: none;
+            -ms-pointer-events: none;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        @media screen and (max-width: 480px) {
+
+            input[type="submit"],
+            input[type="reset"],
+            input[type="button"],
+            button,
+            .button {
+                padding: 0;
+            }
+
+        }
+
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"],
+        button,
+        .button {
+            background-color: transparent;
+            box-shadow: inset 0 0 0 2px #666666;
+            color: #444444 !important;
+        }
+
+        input[type="submit"]:hover,
+        input[type="reset"]:hover,
+        input[type="button"]:hover,
+        button:hover,
+        .button:hover {
+            color: #EF6480 !important;
+            box-shadow: inset 0 0 0 2px #EF6480;
+        }
+
+        input[type="submit"]:active,
+        input[type="reset"]:active,
+        input[type="button"]:active,
+        button:active,
+        .button:active {
+            background-color: rgba(239, 100, 128, 0.15);
+        }
+
+        input[type="submit"].icon:before,
+        input[type="reset"].icon:before,
+        input[type="button"].icon:before,
+        button.icon:before,
+        .button.icon:before {
+            color: #999999;
+        }
+
+        /*rest*/
+
+        #footer {
+            text-align: center;
+            margin-top: 4em;
+        }
+
+        #footer:before {
+            content: '';
+            display: inline-block;
+            width: 7em;
+            height: 2px;
+            background-color: black;
+            margin-bottom: 4em;
+        }
+
+        #footer a {
+            color: inherit;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            vertical-align: baseline;
+            list-style: none;
+        }
+
+        ul.icons {
+            cursor: default;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul.icons li {
+            display: inline-block;
+            padding: 0 1em 0 0;
+        }
+
+        ul.icons li:last-child {
+            padding-right: 0;
+        }
+
+
+        /* Icon */
+
+        .icon {
+            text-decoration: none;
+            border-bottom: none;
+            position: relative;
+        }
+
+        .icon:before {
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+            text-transform: none !important;
+        }
+
+        .icon > .label {
+            display: none;
+        }
+
+        .icon.major {
+            display: block;
+            margin: 0 0 1.5em 0;
+        }
+
+        .icon.major:before {
+            cursor: default;
+            font-size: 2.5rem;
+            box-shadow: inset 0 0 0 2px #666666;
+            width: 2.5em;
+            height: 2.5em;
+            line-height: 2.5em;
+            display: inline-block;
+            border-radius: 100%;
+            color: #666666;
+        }
+
+        @media screen and (max-width: 736px) {
+
+            .icon.major:before {
+                font-size: 2rem;
+            }
+
         }
     </style>
 </head>
 <body>
 <header>
-    <picture>
-
-        <img src="images/header.jpg" alt="karmuazine">
-
-    </picture>
+    <div class="image">
+        <img src="images/header.jpg" alt="karmuazine"/>
+        <h1>karmuazine</h1>
+    </div>
 </header>
 <section>
-    <iframe width="100%" height="450px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/188543408&amp;color=e00000&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false"></iframe>
+    <iframe width="100%" height="450px" scrolling="no" frameborder="no"
+            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/188543408&amp;color=e00000&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false"></iframe>
 </section>
-<footer>
-text
-</footer>
+<div id="wrapper">
+    <section class="main items">
+
+        <article class="item">
+            <header>
+                <a href="#" style="background-image: url('images/item0.jpg');"></a>
+
+                <h3>Feugiat et faucibus</h3>
+            </header>
+            <p>Fusce malesuada efficitur venenatis. Pellentesque tempor leo sed massa hendrerit hendrerit. In sed
+                feugiat est, eu congue elit. Ut porta magna vel felis sodales vulputate. Donec faucibus dapibus lacus
+                non ornare.</p>
+            <ul class="actions">
+                <li><a href="#" class="button">More</a></li>
+            </ul>
+        </article>
+        <article class="item">
+            <header>
+                <a href="#" style="background-image: url('images/item1.jpg');"></a>
+
+                <h3>Feugiat et faucibus</h3>
+            </header>
+            <p>Fusce malesuada efficitur venenatis. Pellentesque tempor leo sed massa hendrerit hendrerit. In sed
+                feugiat est, eu congue elit. Ut porta magna vel felis sodales vulputate. Donec faucibus dapibus lacus
+                non ornare.</p>
+            <ul class="actions">
+                <li><a href="#" class="button">More</a></li>
+            </ul>
+        </article>
+    </section>
+    <footer id="footer">
+        <ul class="icons">
+            <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon fa-vk"><span class="label">VKontakte</span></a></li>
+            <li><a href="#" class="icon fa-soundcloud"><span class="label">Soundcloud</span></a></li>
+        </ul>
+    </footer>
+</div>
 </body>
 </html>
