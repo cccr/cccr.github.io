@@ -13,8 +13,7 @@
 }
 
 .column1em {
-    min-width: 1.7em;
-    flex: 0 1 1em !important;
+    flex: 0 0 1.5em !important;
 }
 
 .row {
