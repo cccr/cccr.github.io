@@ -1,6 +1,7 @@
 .rowContainer{
     display: flex;
     flex-direction: column;
+    min-width: 2em;
 }
 
 .columnContainer{
