@@ -14,10 +14,15 @@
     <div id="originalText"></div>
 </div>
 <div class="row rowStretched">
-    <button id="hintButton" class="col-1" onclick="hint()">?</button>
+    <div class="col-1 column">
+        <button id="hintButton" class="col-1" onclick="hint()">?</button>
+        <button id="clearButton" class="col-1" onclick="hint()">x</button>
+        <button id="replaceButton" class="col-1" onclick="hint()">d</button>
+
+    </div>
     <div spellcheck="false" contenteditable="true" id="typedAnswer"
-         onfocus="this.innerHTML=this.dataset.content?this.dataset.content:''"
-         onkeyup="this.dataset.content=this.textContent.replace(/(<([^>]+)>)/ig,'');" class="col-0"></div>
+         onfocus="this.innerHTML=this.dataset.content?this.dataset.content.split('\n').forEach((line, i) => { i>0?`<div>${line}</div>`:line})''"
+         onkeyup="this.dataset.content=this.innerHTML.replace(/(<div>)/ig,'\n').replace(/(<([^>]+)>)/ig,'');" class="col-0"></div>
 </div>
 <div class="row rowStretched">
     <button id="answerButton" class="col-1">!</button>

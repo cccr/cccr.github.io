@@ -9,6 +9,15 @@
 .row {
     display: flex;
     min-width: 10em;
+    flex-direction: row;
+    min-height: 1.5em;
+    align-items: flex-start;
+}
+
+.column {
+    display: flex;
+    min-width: 10em;
+    flex-direction: column;
     min-height: 1.5em;
     align-items: flex-start;
 }
@@ -85,6 +94,7 @@ div#typedAnswer {
     margin-top: 2px;
     min-height: 1.42em !important;
     line-height: 1.4em;
+    white-space: pre-wrap;
 }
 
 div#answer {
