@@ -16,12 +16,10 @@
         <div id="originalText"></div>
     </div>
     <div class="columnContainer row">
-        <div class="columnContainer column column1em">
-            <div class="rowContainer">
-                <button id="hintButton" class="row" onclick="hint()">?</button>
-                <button id="clearButton" class="row row1em" onclick="hint()">x</button>
-                <button id="replaceButton" class="row row1em" onclick="hint()">d</button>
-            </div>
+        <div class="rowContainer column column1em">
+            <button id="hintButton" class="row" onclick="hint()">?</button>
+            <button id="clearButton" class="row row1em" onclick="hint()">x</button>
+            <button id="replaceButton" class="row row1em" onclick="hint()">d</button>
         </div>
         <div class="column" spellcheck="false" contenteditable="true" id="typedAnswer"
              onfocus="this.innerHTML=this.dataset.content?this.dataset.content.split('\n').forEach((line, i) => { i>0?`<div>${line}</div>`:line})''"
@@ -33,8 +31,7 @@
     </div>
     <div class="columnContainer row">
 
-        <button id="eraseCookie" class="column columnUp column1em"
-                onclick="eraseCookie('shown'); location.reload(true)">&#x21bb;</button>
+        <button id="eraseCookie" class="column columnUp column1em" onclick="eraseCookie('shown'); location.reload(true)">&#x21bb;</button>
         <button id="nextQuestion" class="column columnUp" onclick="fetchData()">next</button>
         <div id="blocks" class="rowContainer column">
             <button id="changeBlock" onclick="chooseBlock()">change</button>
