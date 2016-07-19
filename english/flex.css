@@ -14,7 +14,11 @@
 
 .column1em {
     flex: 0 1 1.5em !important;
-    -webkit-flex: 0 1 2.6em;
+}
+
+.columnWithRowWebKit {
+    flex: 0 1 1.5em !important;
+    -webkit-flex: 0 1 2.6em !important;
 }
 
 .row {

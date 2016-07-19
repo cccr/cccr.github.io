@@ -6,10 +6,6 @@
     display: none !important;
 }
 
-div {
-    border: 1px solid green;
-}
-
 button {
     font-size: 1.5em;
     min-width: 1.5em;
@@ -64,7 +60,6 @@ div#typedAnswer {
     margin-top: 2px;
     min-height: 1.42em !important;
     line-height: 1.4em;
-    white-space: pre-wrap;
 }
 
 div#answer {
