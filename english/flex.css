@@ -16,9 +16,8 @@
     flex: 0 1 1.5em !important;
 }
 
-.columnWithRowWebKit {
-    flex: 0 1 1.5em !important;
-    -webkit-flex: 0 1 2.6em !important;
+.columnContainer.column {
+    flex: 0 0 auto;
 }
 
 .row {
