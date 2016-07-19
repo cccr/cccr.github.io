@@ -6,40 +6,6 @@
     display: none !important;
 }
 
-.row {
-    display: flex;
-    min-width: 10em;
-    flex-direction: row;
-    min-height: 1.5em;
-    align-items: flex-start;
-}
-
-.column {
-    display: flex;
-    min-width: 10em;
-    flex-direction: column;
-    min-height: 1.5em;
-    align-items: flex-start;
-}
-
-.rowStretched {
-    align-items: stretch !important;
-}
-
-.row::after {
-    content: "";
-    clear: both;
-    display: block;
-}
-
-.col-1 {
-    flex: 0 0 1.5em;
-}
-
-.col-0 {
-    flex: auto;
-}
-
 button {
     font-size: 1.5em;
     min-width: 1.5em;

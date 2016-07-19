@@ -6,37 +6,40 @@
     <title>&#331;</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="flex.css" type="text/css">
     <script src="diff.min.js"></script>
     <script src="script.js"></script>
 </head>
 <body>
-<div class="row">
-    <div id="originalText"></div>
-</div>
-<div class="row rowStretched">
-    <div class="col-1 column">
-        <button id="hintButton" class="col-1" onclick="hint()">?</button>
-        <button id="clearButton" class="col-1" onclick="hint()">x</button>
-        <button id="replaceButton" class="col-1" onclick="hint()">d</button>
-
+<section class="rowContainer">
+    <div class="row">
+        <div id="originalText"></div>
     </div>
-    <div spellcheck="false" contenteditable="true" id="typedAnswer"
-         onfocus="this.innerHTML=this.dataset.content?this.dataset.content.split('\n').forEach((line, i) => { i>0?`<div>${line}</div>`:line})''"
-         onkeyup="this.dataset.content=this.innerHTML.replace(/(<div>)/ig,'\n').replace(/(<([^>]+)>)/ig,'');" class="col-0"></div>
-</div>
-<div class="row rowStretched">
-    <button id="answerButton" class="col-1">!</button>
-    <div id="answer" class="hide col-0"></div>
-</div>
-<div class="row">
-    <button id="eraseCookie" class="col-1" onclick="eraseCookie('shown'); location.reload(true)">&#x21bb;</button>
-    <button id="nextQuestion" class="col-0" onclick="fetchData()">next</button>
-    <div id="blocks" class="col-0">
+    <div class="columnContainer row">
+        <div class="rowContainer column column1em">
+            <button id="hintButton" class="row" onclick="hint()">?</button>
+            <button id="clearButton" class="row row1em" onclick="hint()">x</button>
+            <button id="replaceButton" class="row row1em" onclick="hint()">d</button>
+        </div>
+        <div class="column" spellcheck="false" contenteditable="true" id="typedAnswer"
+             onfocus="this.innerHTML=this.dataset.content?this.dataset.content.split('\n').forEach((line, i) => { i>0?`<div>${line}</div>`:line})''"
+             onkeyup="this.dataset.content=this.innerHTML.replace(/(<div>)/ig,'\n').replace(/(<([^>]+)>)/ig,'');"></div>
+    </div>
+    <div class="columnContainer row">
+        <button id="answerButton" class="column column1em">!</button>
+        <div id="answer" class="column hide"></div>
+    </div>
+    <div class="columnContainer row">
+
+        <button id="eraseCookie" class="column columnUp column1em" onclick="eraseCookie('shown'); location.reload(true)">&#x21bb;</button>
+        <button id="nextQuestion" class="column columnUp" onclick="fetchData()">next</button>
+        <div id="blocks" class="rowContainer column">
             <button id="changeBlock" onclick="chooseBlock()">change</button>
             <ul id="availableBlocks" class="hide"></ul>
+        </div>
+        <button id="setup" class="column column1em columnUp">&#331;</button>
     </div>
-    <button id="setup" class="col-1">&#331;</button>
-</div>
+</section>
 <div id="thumbsUp" class="hide">&#128077;</div>
 </body>
 </html>

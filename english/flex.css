@@ -1,0 +1,29 @@
+.rowContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.columnContainer{
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    flex: 1 1 auto;
+}
+
+.column1em {
+    flex: 0 1 1em !important;
+}
+
+.row {
+    flex: 1 1 auto;
+}
+
+.row1em {
+    flex: 0 1 1em !important;
+}
+
+.columnUp {
+    align-self: flex-start !important;
+}
