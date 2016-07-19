@@ -16,10 +16,12 @@
         <div id="originalText"></div>
     </div>
     <div class="columnContainer row">
-        <div class="rowContainer column column1em">
-            <button id="hintButton" class="row" onclick="hint()">?</button>
-            <button id="clearButton" class="row row1em" onclick="hint()">x</button>
-            <button id="replaceButton" class="row row1em" onclick="hint()">d</button>
+        <div class="columnContainer column column1em">
+            <div class="rowContainer">
+                <button id="hintButton" class="row" onclick="hint()">?</button>
+                <button id="clearButton" class="row row1em" onclick="hint()">x</button>
+                <button id="replaceButton" class="row row1em" onclick="hint()">d</button>
+            </div>
         </div>
         <div class="column" spellcheck="false" contenteditable="true" id="typedAnswer"
              onfocus="this.innerHTML=this.dataset.content?this.dataset.content.split('\n').forEach((line, i) => { i>0?`<div>${line}</div>`:line})''"
