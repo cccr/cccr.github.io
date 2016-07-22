@@ -3,59 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #direction {
+            font-size: 3em;
+        }
+    </style>
 </head>
 <body>
 
 
 <script>
-    document.addEventListener('touchstart', handleTouchStart, false);
-    document.addEventListener('touchmove', handleTouchMove, false);
-    var direction = document.getElementById("direction");
 
-    direction.innerHTML="$";
-
-    var xDown = null;
-    var yDown = null;
-
-    function handleTouchStart(evt) {
-        xDown = evt.touches[0].clientX;
-        yDown = evt.touches[0].clientY;
-    };
-
-    function handleTouchMove(evt) {
-        if ( ! xDown || ! yDown ) {
-            return;
-        }
-
-        var xUp = evt.touches[0].clientX;
-        var yUp = evt.touches[0].clientY;
-
-        var xDiff = xDown - xUp;
-        var yDiff = yDown - yUp;
-
-        if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
-            if ( xDiff > 0 ) {
-                direction.innerHTML="<";
-                /* left swipe */
-            } else {
-                direction.innerHTML=">";
-                /* right swipe */
-            }
+    function ready(fn) {
+        if (document.readyState != "loading") {
+            fn();
         } else {
-            if ( yDiff > 0 ) {
-                direction.innerHTML="^";
-                /* up swipe */
-            } else {
-                direction.innerHTML="v";
-                /* down swipe */
-            }
+            document.addEventListener("DOMContentLoaded", fn);
         }
-        /* reset values */
-        xDown = null;
-        yDown = null;
+    }
+
+    var fn = function() {
+
+        document.addEventListener('touchstart', handleTouchStart, false);
+        document.addEventListener('touchmove', handleTouchMove, false);
+        var direction = document.getElementById("direction");
+
+        direction.innerHTML = "$";
+
+        var xDown = null;
+        var yDown = null;
+
+        function handleTouchStart(evt) {
+            xDown = evt.touches[0].clientX;
+            yDown = evt.touches[0].clientY;
+        }
+
+        function handleTouchMove(evt) {
+            if (!xDown || !yDown) {
+                return;
+            }
+
+            var xUp = evt.touches[0].clientX;
+            var yUp = evt.touches[0].clientY;
+
+            var xDiff = xDown - xUp;
+            var yDiff = yDown - yUp;
+
+            if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+                if (xDiff > 0) {
+                    direction.innerHTML = "<";
+                    /* left swipe */
+                } else {
+                    direction.innerHTML = ">";
+                    /* right swipe */
+                }
+            } else {
+                if (yDiff > 0) {
+                    direction.innerHTML = "^";
+                    /* up swipe */
+                } else {
+                    direction.innerHTML = "v";
+                    /* down swipe */
+                }
+            }
+            /* reset values */
+            xDown = null;
+            yDown = null;
+        }
     };
 
+    ready(fn);
 </script>
-<div id=direction">.</div>
+<div id="direction">.</div>
 </body>
 </html>
