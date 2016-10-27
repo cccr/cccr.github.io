@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,13 +8,23 @@
         #direction {
             font-size: 3em;
         }
-    </style>
+
+        #viewport {
+          margin: 100px;
+          width: 160px;
+          height: 2.2em;
+          line-height: 1.1em;
+          border: 1px solid black;
+          overflow: hidden;
+        }
+      </style>
 </head>
 <body>
 
+  <div id="direction">.</div>
+  <div id="viewport"></div>
 
 <script>
-
     function ready(fn) {
         if (document.readyState != "loading") {
             fn();
@@ -21,34 +32,25 @@
             document.addEventListener("DOMContentLoaded", fn);
         }
     }
-
     var fn = function() {
-
         document.addEventListener('touchstart', handleTouchStart, false);
         document.addEventListener('touchmove', handleTouchMove, false);
         var direction = document.getElementById("direction");
-
         direction.innerHTML = "$";
-
         var xDown = null;
         var yDown = null;
-
         function handleTouchStart(evt) {
             xDown = evt.touches[0].clientX;
             yDown = evt.touches[0].clientY;
         }
-
         function handleTouchMove(evt) {
             if (!xDown || !yDown) {
                 return;
             }
-
             var xUp = evt.touches[0].clientX;
             var yUp = evt.touches[0].clientY;
-
             var xDiff = xDown - xUp;
             var yDiff = yDown - yUp;
-
             if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
                 if (xDiff > 0) {
                     direction.innerHTML = "<";
@@ -71,9 +73,17 @@
 //            yDown = null;
         }
     };
-
     ready(fn);
+
+let viewport = document.getElementById('viewport');
+
+viewport.innerHTML = "1 lorem ipsum generate tuda syuda text long. 2 lorem ipsum generate tuda syuda text long. 3 lorem ipsum generate tuda syuda text long";
+
+let currentScrollPosition = 0;
+
+// function scrollLeft() {}
+// window.setInterval(function() { viewport.innerHTML = viewport.innerHTML.substr(1) }, 1000);
+
 </script>
-<div id="direction">.</div>
 </body>
 </html>
