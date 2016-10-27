@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,8 +6,15 @@
     <style>
 
 
-        #direction {
-            font-size: 3em;
+        #container {
+          position: fixed;
+          z-index: -100;
+          visibility: hidden;
+          font-size: 1.2em;
+          margin: 20px;
+          width: auto;
+          line-height: 1.1em;
+          border: 1px solid black;
         }
 
         #viewport {
@@ -24,17 +30,22 @@
 </head>
 <body>
 
-  <div id="direction">.</div>
+  <div id="container"></div>
   <div id="viewport"></div>
+  <div id="result"></div>
 
 <script>
 
-    let currentScrollPosition = 0;
-    let viewport = document.getElementById('viewport');
+    var currentScrollPosition = 0;
+    var viewport = document.getElementById('viewport');
+    var container = document.getElementById('container');
+    var result = document.getElementById('result');
 
-     const text = "1 lorem ipsum generate tuda syuda text long. 2 lorem ipsum generate tuda syuda text long. 3 lorem ipsum generate tuda syuda text long";
+
+     var text = "1 lorem ipsum generate tuda syuda text long. 2 lorem ipsum generate tuda syuda text long. 3 lorem ipsum generate tuda syuda text long";
      viewport.innerHTML = text;
-
+     container.innerHTML = text;
+     updateMeter();
 
     function ready(fn) {
         if (document.readyState != "loading") {
@@ -46,8 +57,7 @@
     var fn = function() {
         viewport.addEventListener('touchstart', handleTouchStart, false);
         viewport.addEventListener('touchmove', handleTouchMove, false);
-        var direction = document.getElementById("direction");
-        direction.innerHTML = " ";
+
         var xDown = null;
         // var yDown = null;
         function handleTouchStart(evt) {
@@ -104,8 +114,15 @@
 function scroll() {
   if (currentScrollPosition >= 0) {
     viewport.innerHTML = text.split(' ').slice(currentScrollPosition).join(' ');
+    container.innerHTML = text.split(' ').slice(currentScrollPosition).join(' ');
+    updateMeter();
   }
 }
+
+function updateMeter() {
+  result.innerHTML = Math.round((viewport.offsetHeight / container.offsetHeight) * 100) + '%';
+}
+
 </script>
 </body>
 </html>
