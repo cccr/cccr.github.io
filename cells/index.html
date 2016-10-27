@@ -5,24 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
 
+#s {
+  width: auto;
+  height: 2.3em;
+  overflow: hidden;
+  margin: 20px;
+  font-size: 1.2em;
+            line-height: 1.1em;
+}
 
         #container {
-          position: fixed;
+          /*position: fixed;*/
           z-index: -100;
           visibility: hidden;
-          font-size: 1.2em;
-          margin: 20px;
+
           width: auto;
-          line-height: 1.1em;
+
           border: 1px solid black;
         }
 
         #viewport {
-          font-size: 1.2em;
-          margin: 20px;
+
+
           width: auto;
           height: 2.2em;
-          line-height: 1.1em;
+
           border: 1px solid black;
           overflow: hidden;
         }
@@ -30,10 +37,12 @@
 </head>
 <body>
 
-  <div id="container"></div>
+<div id="s">
   <div id="viewport"></div>
-  <div id="result"></div>
+  <div id="container"></div>
 
+</div>
+<div id="result"></div>
 <script>
 
     var currentScrollPosition = 0;
