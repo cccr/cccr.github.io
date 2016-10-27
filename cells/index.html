@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -37,6 +38,8 @@
 <script>
 
     var currentScrollPosition = 0;
+    var resultNum = 0;
+
     var viewport = document.getElementById('viewport');
     var container = document.getElementById('container');
     var result = document.getElementById('result');
@@ -76,8 +79,10 @@
             // if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
                 if (xDiff > 0) {
                     // direction.innerHTML = "<";
-                    currentScrollPosition += 0.2;
-                    scroll();
+                    if (resultNum != 100) {
+                      currentScrollPosition += 0.2;
+                      scroll();
+                    }
                     // console.log('<');
                     xDiff = 0;
                     xDown = xUp;
@@ -120,7 +125,8 @@ function scroll() {
 }
 
 function updateMeter() {
-  result.innerHTML = Math.round((viewport.offsetHeight / container.offsetHeight) * 100) + '%';
+  resultNum = Math.round((viewport.offsetHeight / container.offsetHeight) * 100);
+  result.innerHTML = resultNum + '%';
 }
 
 </script>
