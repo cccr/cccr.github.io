@@ -1,16 +1,20 @@
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+
+
         #direction {
             font-size: 3em;
         }
 
         #viewport {
-          margin: 50px;
-          width: 200px;
+          font-size: 1.2em;
+          margin: 20px;
+          width: auto;
           height: 2.2em;
           line-height: 1.1em;
           border: 1px solid black;
@@ -40,9 +44,9 @@
         }
     }
     var fn = function() {
-        document.addEventListener('touchstart', handleTouchStart, false);
-        document.addEventListener('touchstart', handleTouchStart, false);
-        document.addEventListener('touchmove', handleTouchMove, false);
+        viewport.addEventListener('touchstart', handleTouchStart, false);
+        viewport.addEventListener('touchstart', handleTouchStart, false);
+        viewport.addEventListener('touchmove', handleTouchMove, false);
         var direction = document.getElementById("direction");
         direction.innerHTML = "$";
         var xDown = null;
@@ -62,13 +66,13 @@
             if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
                 if (xDiff > 0) {
                     direction.innerHTML = "<";
-                    currentScrollPosition += 1;
+                    currentScrollPosition += 0.2;
                     scroll();
                     console.log('<');
                     /* left swipe */
                 } else {
                     direction.innerHTML = ">";
-                    currentScrollPosition -= 1;
+                    currentScrollPosition -= 0.2;
                     if (currentScrollPosition < 0) {
                       currentScrollPosition = 0;
                     }
@@ -94,7 +98,7 @@
 
 function scroll() {
   if (currentScrollPosition >= 0) {
-    viewport.innerHTML = text.substr(currentScrollPosition/2);
+    viewport.innerHTML = text.split(' ').slice(currentScrollPosition).join(' ');
   }
 }
 </script>
