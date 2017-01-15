@@ -1,0 +1,47 @@
+.rowContainer {
+    display: flex;
+    flex-direction: column;
+}
+.columnContainer {
+    display: flex;
+    flex-direction: row;
+}
+.column {
+    flex: 1 1 auto;
+}
+.column1em {
+    flex: 0 1 1.5em !important;
+}
+.columnContainer.column {
+    flex: 0 0 auto;
+}
+.row {
+    flex: 1 1 auto;
+}
+.row1em {
+    flex: 0 1 1em !important;
+}
+.row2em {
+    flex: 0 1 2em !important;
+}
+.columnUp {
+    align-self: flex-start !important;
+}
+.row.center {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+.row.start {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+}
+.row.end {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: row;
+}
+.row.end>*, .row.center>*, .row.start>* {
+    flex: 1;
+}
