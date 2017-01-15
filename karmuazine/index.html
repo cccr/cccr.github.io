@@ -20,14 +20,13 @@
             height: 100%;
             padding: 0;
             margin: 0;
-            background-image: url("./images/bg3.png");
+            background-image: url("./images/bg_600.png");
             background-repeat: no-repeat;
             background-size: cover;
         }
 
         header {
-            /*font-size: 2em;*/
-            font-size: 2.5vw;
+            font-size: 2em;
             color: #D80A39;
         }
 
@@ -65,7 +64,12 @@
             padding-bottom: 0.5em;
         }
 
-        #connect > div {
+        #connect > a {
+            display: flex;
+            flex-basis: 2em;
+        }
+
+        #connect > a > div {
             flex-basis: 2em;
             background-size: contain;
             background-repeat: no-repeat;
@@ -140,10 +144,10 @@
     <a href="//karmuazine.bandcamp.com/" class="eagerRow">Bandcamp</a>
 </main>
 <footer id="connect" class="row2em columnContainer justifyContentSpaceAround">
-    <div id="fb" class="eagerColumn"></div>
-    <div id="vk" class="eagerColumn"></div>
-    <div id="tw" class="eagerColumn"></div>
-    <div id="mail" class="eagerColumn"></div>
+    <a href="//facebook.com/Karmuazine/"><div id="fb" class="eagerColumn"></div></a>
+    <a href="//vk.com/karmuazine"><div id="vk" class="eagerColumn"></div></a>
+    <a href="//twitter.com/karmuazine"><div id="tw" class="eagerColumn"></div></a>
+    <a href="mailto:karmuazine@mail.ru"><div id="mail" class="eagerColumn"></div></a>
 </footer>
 </body>
 </html>
