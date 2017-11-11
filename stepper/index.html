@@ -40,12 +40,12 @@
 
 <body>
 
-    <form action='/' method='POST'><input type='hidden' name='control' id='control'></form>
     <div id='value'></div>
 
     <script>
         function post(url, callback, data) {
             var xhr = new XMLHttpRequest();
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
             xhr.open('POST', url, true);
             xhr.onload = function(e) {
                 if (this.status == 200) {
@@ -53,7 +53,7 @@
                 }
             };
 
-            xhr.send(JSON.stringify(data));
+            xhr.send(data);
         }
 
         var times = n => f => {
@@ -106,9 +106,7 @@
 
         function saveValue() {
             value.style.opacity = 1;
-            var data = {};
-            data.control = (getScrollPercent() - 50);
-            post('/', setValue, data);
+            post('/', setValue, 'control=' + encodeURIComponent((getScrollPercent() - 50)));
         }
 
         var timer = null;
