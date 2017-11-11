@@ -45,8 +45,8 @@
     <script>
         function post(url, callback, data) {
             var xhr = new XMLHttpRequest();
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onload = function(e) {
                 if (this.status == 200) {
                     callback(this.responseText);
