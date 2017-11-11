@@ -14,7 +14,7 @@
             font-size: 6rem;
             padding: 0.2em 0.4em;
         }
-
+        
         body {
             margin: 0;
             background: #30E8BF;
@@ -27,7 +27,7 @@
             font-family: monospace;
             font-size: 4em;
         }
-
+        
         div {
             flex-grow: 1;
             border-bottom: 1px solid white;
@@ -58,7 +58,9 @@
 
         var times = n => f => {
             var iter = i => {
-                if (i === n) { return; }
+                if (i === n) {
+                    return;
+                }
                 f(i);
                 iter(i + 1);
             };
@@ -85,48 +87,61 @@
 
         var value = document.getElementById('value');
 
+        var setValueText = function(text) {
+            value.innerHTML = text;
+        };
+
+        var setValueStop = function(text) {
+            setValueText('X');
+        };
+
         function getScrollPercent() {
             var height = document.body.scrollHeight - document.body.clientHeight;
             var scroll = document.body.scrollTop;
 
-            if (scroll < 0) { return 0 }
-            if (scroll >= height) { return 100 }
-            return Math.round((scroll * 100)/height);
+            if (scroll < 0) {
+                return 0
+            }
+            if (scroll >= height) {
+                return 100
+            }
+            return Math.round((scroll * 100) / height);
         }
 
-
-                var setValue = function(dummy) {
-                    value.innerHTML = getScrollPercent() - 50;
-                };
-
+        var setValue = function(dummy) {
+            setValueText(getScrollPercent() - 50);
+        };
 
         setValue();
 
+        value.addEventListener('click', function(e) {
+                    post('/', setValueStop, 'control=0');
+                }
 
 
-        function saveValue() {
-            value.style.opacity = 1;
-            post('/', setValue, 'control=' + encodeURIComponent((getScrollPercent() - 50)));
-        }
 
-        var timer = null;
-        window.addEventListener('scroll', function(e) {
-            last_known_scroll_position = window.scrollY;
-            if (!ticking) {
-                value.style.opacity = 0.5;
-                window.requestAnimationFrame(function() {
-                    setValue();
-                    ticking = false;
+                function saveValue() {
+                    value.style.opacity = 1;
+                    post('/', setValue, 'control=' + encodeURIComponent((getScrollPercent() - 50)));
+                }
+
+                var timer = null; window.addEventListener('scroll', function(e) {
+                    last_known_scroll_position = window.scrollY;
+                    if (!ticking) {
+                        value.style.opacity = 0.5;
+                        window.requestAnimationFrame(function() {
+                            setValue();
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                    if (timer !== null) {
+                        clearTimeout(timer);
+                    }
+                    timer = setTimeout(function() {
+                        saveValue();
+                    }, 500);
                 });
-                ticking = true;
-            }
-            if (timer !== null) {
-                clearTimeout(timer);
-            }
-            timer = setTimeout(function() {
-                saveValue();
-            }, 500);
-        });
     </script>
 </body>
 
