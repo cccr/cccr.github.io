@@ -11,7 +11,7 @@
             transform: translate(-50%, -50%);
             background: #FFFFFF;
             color: black;
-            font-size: 6em;
+            font-size: 6rem;
             padding: 0.2em 0.4em;
         }
 
@@ -85,11 +85,11 @@
 
         function saveValue() {
             value.style.opacity = 1;
-            //document.forms[0].submit();
+            document.forms[0].submit();
         }
 
-        function setValue() {
-            value.innerHTML = getScrollPercent() - 50;
+        function setValue(pos) {
+            value.innerHTML = pos | getScrollPercent() - 50;
         }
 
         var timer = null;
@@ -98,7 +98,7 @@
             if (!ticking) {
                 value.style.opacity = 0.5;
                 window.requestAnimationFrame(function() {
-                    setValue();
+                    setValue(last_known_scroll_position);
                     ticking = false;
                 });
                 ticking = true;
