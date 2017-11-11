@@ -1,0 +1,115 @@
+<html>
+
+<head>
+    <style>
+        #value {
+            width: 3em;
+            text-align: center;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #FFFFFF;
+            color: black;
+            font-size: 2em;
+            padding: 0.2em 0.4em;
+        }
+
+        body {
+            margin: 0;
+            background: #30E8BF;
+            background: -webkit-linear-gradient(#FF8235, #30E8BF);
+            background: linear-gradient(#FF8235, #30E8BF);
+            display: flex;
+            height: 200vh;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
+
+        div {
+            flex-grow: 1;
+            border-bottom: 1px solid white;
+            color: white;
+            font-family: monospace;
+        }
+    </style>
+
+    <title>turn</title>
+</head>
+
+<body>
+
+    <form action='/' method='POST'></form>
+    <div id='value'></div>
+
+    <script>
+        var times = n => f => {
+            var iter = i => {
+                if (i === n) return;
+                f(i);
+                iter(i + 1);
+            }
+            return iter(0);
+        }
+
+        var getNFromRange = function(n) {
+            var map = function(n, in_min, in_max, out_min, out_max) {
+                return (n - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+            };
+            return map(n, 0, 20, -10, 10);
+        }
+
+        var addStripe = function(num) {
+            var div = document.createElement('div');
+            div.innerHTML = num;
+            return div;
+        }
+
+        times(20)((n) => document.body.appendChild(addStripe(getNFromRange(n) + 'x')));
+
+        var last_known_scroll_position = 0;
+        var ticking = false;
+
+        var value = document.getElementById('value');
+
+        function getScrollPercent() {
+            var h = document.documentElement,
+                b = document.body,
+                st = 'scrollTop',
+                sh = 'scrollHeight';
+            return Math.round((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100);
+        }
+
+        setValue();
+
+        function saveValue() {
+            value.style.opacity = 1;
+            document.forms[0].submit();
+        }
+
+        function setValue() {
+            value.innerHTML = getScrollPercent() - 50;
+        }
+
+        var timer = null;
+        window.addEventListener('scroll', function(e) {
+            last_known_scroll_position = window.scrollY;
+            if (!ticking) {
+                value.style.opacity = 0.5;
+                window.requestAnimationFrame(function() {
+                    setValue();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+            if (timer !== null) {
+                clearTimeout(timer);
+            }
+            timer = setTimeout(function() {
+                saveValue();
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>
