@@ -78,6 +78,7 @@
             var scroll = document.body.scrollTop;
 
             if (scroll < 0) return 0;
+            if (scroll >= height) return 100;
             return Math.round((scroll * 100)/height);
         }
 
