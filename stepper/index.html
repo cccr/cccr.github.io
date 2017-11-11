@@ -40,31 +40,43 @@
 
 <body>
 
-    <form action='/' method='POST'></form>
+    <form action='/' method='POST'><input type='hidden' name='control' id='control'></form>
     <div id='value'></div>
 
     <script>
+        function post(url, callback, data) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.onload = function(e) {
+                if (this.status == 200) {
+                    callback(this.responseText);
+                }
+            };
+
+            xhr.send(JSON.stringify(data));
+        }
+
         var times = n => f => {
             var iter = i => {
-                if (i === n) return;
+                if (i === n) { return; }
                 f(i);
                 iter(i + 1);
-            }
+            };
             return iter(0);
-        }
+        };
 
         var getNFromRange = function(n) {
             var map = function(n, in_min, in_max, out_min, out_max) {
                 return (n - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
             };
             return map(n, 0, 20, -10, 10);
-        }
+        };
 
         var addStripe = function(num) {
             var div = document.createElement('div');
             div.innerHTML = num;
             return div;
-        }
+        };
 
         times(20)((n) => document.body.appendChild(addStripe(getNFromRange(n) + 'x')));
 
@@ -77,20 +89,26 @@
             var height = document.body.scrollHeight - document.body.clientHeight;
             var scroll = document.body.scrollTop;
 
-            if (scroll < 0) return 0;
-            if (scroll >= height) return 100;
+            if (scroll < 0) { return 0 }
+            if (scroll >= height) { return 100 }
             return Math.round((scroll * 100)/height);
         }
 
+
+                var setValue = function(dummy) {
+                    value.innerHTML = getScrollPercent() - 50;
+                };
+
+
         setValue();
+
+
 
         function saveValue() {
             value.style.opacity = 1;
-            //document.forms[0].submit();
-        }
-
-        function setValue() {
-            value.innerHTML = getScrollPercent() - 50;
+            var data = {};
+            data.control = (getScrollPercent() - 50);
+            post('/', setValue, data);
         }
 
         var timer = null;
