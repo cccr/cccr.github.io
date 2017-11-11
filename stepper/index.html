@@ -74,11 +74,14 @@
         var value = document.getElementById('value');
 
         function getScrollPercent() {
+            var height = document.body.scrollHeight - document.body.clientHeight;
+            var scroll = document.body.scrollTop;
+
             var h = document.documentElement,
                 b = document.body,
                 st = 'scrollTop',
                 sh = 'scrollHeight';
-            return Math.round((h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100);
+            return Math.round((scroll * 100)+1/height);
         }
 
         setValue();
@@ -88,8 +91,8 @@
             //document.forms[0].submit();
         }
 
-        function setValue(pos) {
-            value.innerHTML = pos | getScrollPercent() - 50;
+        function setValue() {
+            value.innerHTML = getScrollPercent() - 50;
         }
 
         var timer = null;
@@ -98,7 +101,7 @@
             if (!ticking) {
                 value.style.opacity = 0.5;
                 window.requestAnimationFrame(function() {
-                    setValue(last_known_scroll_position);
+                    setValue();
                     ticking = false;
                 });
                 ticking = true;
