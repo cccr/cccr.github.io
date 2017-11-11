@@ -77,10 +77,7 @@
             var height = document.body.scrollHeight - document.body.clientHeight;
             var scroll = document.body.scrollTop;
 
-            var h = document.documentElement,
-                b = document.body,
-                st = 'scrollTop',
-                sh = 'scrollHeight';
+            if (scroll < 0) return 0;
             return Math.round((scroll * 100)+1/height);
         }
 
