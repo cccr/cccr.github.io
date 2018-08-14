@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+  <input type="text" size="1" value="," id="separator"><br>
+  <textarea id="main" style="width: 66%; height: 50vh;"></textarea><br>
+  <button id="multiLiner">MultiLiner</button>
+  <button id="oneLiner">OneLiner</button>
+  <script>
+  function ready(fn) {
+        if (document.readyState != 'loading'){
+            fn();
+        } else {
+            document.addEventListener('DOMContentLoaded', fn);
+        }
+    }
+    var fn = function() {
+        var textarea = document.getElementById("main");
+        var separator = document.getElementById("separator");
+
+				var multiLinerButton = document.getElementById("multiLiner");
+        var oneLinerButton = document.getElementById("oneLiner");
+
+				var multiLinerFunction = function() {
+            action(textarea, separator, true);
+        }
+        var oneLinerFunction = function() {
+            action(textarea, separator, false);
+        }
+
+				multiLinerButton.addEventListener('click', multiLinerFunction, false);
+        oneLinerButton.addEventListener('click', oneLinerFunction, false);
+    };
+    var action = function(el, separatorElement, multiLiner) {
+    		if (el.value != "") {
+        	
+        }
+        var joinerString = separator.value + (multiLiner ? "\n" : "");
+        var arrayOfLines = el.value.match(/[^\r\n]+/g);
+        var innerHTML = arrayOfLines.join(joinerString);
+        el.value = innerHTML;
+        el.select();
+  			document.execCommand('copy');
+    };
+    ready(fn)
+  </script>
+  </body>
+</html>
