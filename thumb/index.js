@@ -1,5 +1,3 @@
-import logoImageLoaded from "./logo.png";
-
 var imageLoader = document.getElementById("imageLoader");
 imageLoader.addEventListener("change", handleImage, false);
 
@@ -249,7 +247,7 @@ function doRender() {
   });
   captions.push({
     name: "logo",
-    drawable: new CanvasImage(ctx, logoImageLoaded, logo_left.value, logo_top.value, Math.pow(Math.exp(1), logo_scale.value))
+    drawable: new CanvasImage(ctx, "./logo.png", logo_left.value, logo_top.value, Math.pow(Math.exp(1), logo_scale.value))
   });
 
   captions.forEach((element) => element.drawable.draw());
