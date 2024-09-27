@@ -12,8 +12,12 @@
 </head>
 
 <body class="parent">
-    <template id="control-template">
+    <template id="text-control-template">
         <style>
+            .position > label {
+                display: block;
+            }
+
             .teko {
                 font-family: "Teko", sans-serif;
                 font-optical-sizing: auto;
@@ -65,7 +69,7 @@
                     <div class="text">
                         <input id="_text" class="content"><br>
                         <div class="teko">Teko font</div>
-                        <input type="range" class="alpha" min="0" value="1" max="1" step="0.05">
+                        <label>alpha:<input type="range" class="alpha" min="0" value="1" max="1" step="0.05"></label>
                         <div>
                             <input type="color" class="color_picker" id="_color" value="#ffffff" />&nbsp;
                             <div class="picker" style="background: #F0FFFF"></div>
@@ -83,7 +87,7 @@
                     <div class="margin">
                         <label>margin:<input class="margin" id="_margin" value="20" type="number" min="-1"
                                 size="5"></label><br>
-                        <input type="range" class="margin_alpha" min="0" value="0.9" max="1" step="0.05">
+                        <label>alpha:<input type="range" class="margin_alpha" min="0" value="0.9" max="1" step="0.05"></label>
                         <div>
                             <input type="color" class="margin_color_picker" id="_margin_color" value="#00003F" />
                             <div class="picker" style="background: #3F0000"></div>
@@ -96,24 +100,61 @@
         </fieldset>
     </template>
 
+    <template id="image-control-template">
+        <style>
+            .position > label {
+                display: block;
+            }
+
+            .parent {
+                display: grid;
+                grid-template-columns: 2rem 1fr;
+                grid-template-rows: 1fr 2rem;
+                grid-column-gap: 0px;
+                grid-row-gap: 0px;
+            }
+
+            .top_position {
+                grid-area: 1 / 1 / 2 / 2;
+            }
+
+            .top_position input[type=range] {
+                writing-mode: vertical-lr;
+                direction: ltr;
+                vertical-align: middle;
+            }
+
+            .left_position {
+                grid-area: 2 / 3 / 2 / 2;
+            }
+
+            .other_control {
+                grid-area: 1 / 2 / 2 / 3;
+            }
+        </style>
+        <fieldset class="control" class="id_preffix">
+            <legend class="legend"></legend>
+            <div class="parent">
+                <div class="top_position"><input type="range" class="top_range" min="0" value="0">
+                </div>
+                <div class="left_position"><input type="range" class="left_range" min="0" value="0">
+                </div>
+                <div class="other_control">
+                    <label>scale:<input type="range" id="scale" class="scale" min="-2" max="2" value="0"
+                            step="0.02"></label>
+                    <div class="position">
+                        <label>left:<input class="left" id="_left" value="80" type="number" min="0" size="5"></label>
+                        <label>top:<input class="top" id="_top" value="400" type="number" min="0" size="5"></label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </template>
 
     <div class="controls" id="control_app">
         <input type="file" id="imageLoader" name="imageLoader" /><br />
         <label>Canvas scale: <input type="range" id="canvas_scale" class="scale" min="-2" max="2" value="0" step="0.02">
         </label><br />
-        <fieldset class="control">
-            <legend>Logo</legend>
-            <label>scale:<input type="range" id="logo_scale" class="scale" min="-2" max="2" value="0"
-                    step="0.02"></label>
-            <div class="position">
-                <label>left:<input id="logo_left" value="80" type="number" min="0" size="5"></label>
-                <label>top:<input id="logo_top" value="400" type="number" min="0" size="5"></label>
-            </div>
-            <details>
-                <summary>Logo Position</summary>
-                <div id="trackpointArea"></div>
-            </details>
-        </fieldset>
         <div><a id="reload">Reload</a>&nbsp;|&nbsp;<a id="dl" download="Canvas.png">Download Canvas</a></div>
     </div>
     <div class="workspace">

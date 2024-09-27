@@ -8,19 +8,18 @@ var ctx = canvas.getContext("2d");
 var background = new Image();
 var canvasScale = 1;
 
+var captions = [];
 
-class ControlCard extends HTMLElement {
+class BaseControl extends HTMLElement {
   constructor() {
     super();
+  }
+
+  setupTemplate(templateId) {
     this.attachShadow({ mode: 'open' });
-
-    const template = document.getElementById('control-template');
+    const template = document.getElementById(templateId);
     const templateContent = template.content.cloneNode(true);
-
     this.shadowRoot.appendChild(templateContent);
-
-    ControlCard.observedAttributes.forEach((e) => this[e] = this.shadowRoot.querySelector("." + e));
-    this.onInputChange = this.onInputChange.bind(this);
   }
 
   connectedCallback() {
@@ -43,22 +42,48 @@ class ControlCard extends HTMLElement {
     doRender();
   }
 
+  set elements(data) {
+    for (let key in data) {
+      if (data.hasOwnProperty(key)) {
+        this.setAttribute(key, data[key]);
+      }
+    }
+  }
+
+  getObservedAttributes() {
+    return this.constructor.observedAttributes;
+  }
+
+  get elements() {
+    const attributesData = {};
+    const observedAttributes = this.getObservedAttributes();
+    observedAttributes.forEach(attr => {
+      attributesData[attr] = this.getAttribute(attr);
+    });
+    return attributesData;
+  }
+
   static fillTemplate(template, values) {
     return new Function(...Object.keys(values), `return \`${template}\`;`)(...Object.values(values));
   }
+}
+
+class TextControlCard extends BaseControl {
+  constructor() {
+    super();
+    this.setupTemplate('text-control-template');
+    TextControlCard.observedAttributes.forEach(attr => {
+      this[attr] = this.shadowRoot.querySelector(`.${attr}`);
+    });
+    this.onInputChange = this.onInputChange.bind(this);
+  }
 
   static get observedAttributes() {
-    return ['id_preffix', 'legend', 'content', 'color_picker', 'size', 'alpha', 'suggested_size', 'margin_color_picker', 'margin_alpha', 'margin', 'left', 'top', 'left_range', 'top_range', 'left_max', 'top_max',];
+    return ['legend', 'content', 'color_picker', 'size', 'alpha', 'suggested_size', 'margin_color_picker', 'margin_alpha', 'margin', 'left', 'top', 'left_range', 'top_range', 'left_max', 'top_max',];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
-      case 'id_preffix':
-        this.content.id = `${newValue}${this.content.id}`;
-        this.color_picker.id = `${newValue}${this.color_picker.id}`;
-        this.size.id = `${newValue}${this.size.id}`;
-        this.suggested_size.id = `${newValue}${this.suggested_size.id}`;
-        break;
       case 'legend':
         this.legend.textContent = newValue;
         break
@@ -118,7 +143,7 @@ class ControlCard extends HTMLElement {
       case 'suggested_size':
         this.suggested_size.textContent = newValue;
         this.suggested_size.setAttribute('title',
-          ControlCard.fillTemplate(
+          BaseControl.fillTemplate(
             this.suggested_size.getAttribute('data-title'),
             { suggested_size: `${newValue}` }
           )
@@ -127,30 +152,93 @@ class ControlCard extends HTMLElement {
       default:
     }
   }
+}
 
-  set elements(data) {
-    for (let key in data) {
-      if (data.hasOwnProperty(key)) {
-        this.setAttribute(key, data[key]);
-      }
-    }
+class ImageControlCard extends BaseControl {
+  constructor() {
+    super();
+    this.setupTemplate('image-control-template');
+    ImageControlCard.observedAttributes.forEach(attr => {
+      this[attr] = this.shadowRoot.querySelector(`.${attr}`);
+    });
+    this.onInputChange = this.onInputChange.bind(this);
   }
 
-  get elements() {
-    let obj = {};
-    ControlCard.observedAttributes.forEach((e) => obj[e] = this.getAttribute(e));
-    return obj;
+  static fillTemplate(template, values) {
+    return new Function(...Object.keys(values), `return \`${template}\`;`)(...Object.values(values));
+  }
+
+  static get observedAttributes() {
+    return ['legend', 'scale', 'left', 'top', 'left_range', 'top_range', 'left_max', 'top_max',];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+      case 'legend':
+        this.legend.textContent = newValue;
+        break
+      case 'scale':
+        this.scale.value = newValue;
+        break;
+      case 'left_max':
+        this.left.setAttribute("max", newValue);
+        this.left_range.setAttribute("max", newValue);
+        break;
+      case 'top_max':
+        this.top.max = newValue;
+        this.top_range.max = newValue;
+        break;
+      case 'left':
+      case 'left_range':
+        this.left.setAttribute("value", newValue);
+        this.left_range.setAttribute("value", newValue);
+
+        this.left.value = newValue;
+        this.left_range.value = newValue;
+
+        if (!(this.getAttribute("left") === this.getAttribute("left_range"))) {
+          this.setAttribute(["left", "left_range"].filter(e => e !== name), newValue);
+        }
+        break;
+      case 'top':
+      case 'top_range':
+        this.top.setAttribute("value", newValue);
+        this.top_range.setAttribute("value", newValue);
+
+        this.top.value = newValue;
+        this.top_range.value = newValue;
+
+        if (!(this.getAttribute("top") === this.getAttribute("top_range"))) {
+          this.setAttribute(["top", "top_range"].filter(e => e !== name), newValue);
+        }
+        break;
+      default:
+    }
   }
 }
 
-customElements.define('control-card', ControlCard);
+customElements.define('text-control-card', TextControlCard);
+customElements.define('image-control-card', ImageControlCard);
 
 const app = document.getElementById('control_app');
 
-const h1 = document.createElement('control-card');
+const logo = document.createElement('image-control-card');
+logo.setAttribute('id', 'logo');
+logo.elements = {
+  legend: 'Logo',
+  scale: 0,
+  left: 0,
+  top: 0,
+  left_range: 0,
+  top_range: 0,
+  left_max: Number.MAX_SAFE_INTEGER,
+  top_max: Number.MAX_SAFE_INTEGER,
+};
+app.appendChild(logo);
+
+const h1 = document.createElement('text-control-card');
 h1.setAttribute('id', 'h1');
 h1.elements = {
-  id_preffix: 'h1',
   legend: 'H1',
   content: 'Lora IoTipsum',
   color_picker: '#ffffff',
@@ -169,10 +257,9 @@ h1.elements = {
 };
 app.appendChild(h1);
 
-const h2 = document.createElement('control-card');
+const h2 = document.createElement('text-control-card');
 h2.setAttribute('id', 'h2');
 h2.elements = {
-  id_preffix: 'h2',
   legend: 'H2',
   content: 'IoTuesday',
   color_picker: '#ffffff',
@@ -191,20 +278,22 @@ h2.elements = {
 };
 app.appendChild(h2);
 
-
 class CanvasText {
   static fontface = 'Teko';
 
-  constructor(ctx, left, top, text, fontsize, color, alpha, margin, margin_color, margin_alpha) {
+  constructor(ctx, textControlCard) {
     this.ctx = ctx;
+
+    const { left, top, content, size, color_picker, alpha, margin, margin_color_picker, margin_alpha } = textControlCard.elements;
+
     this.left = parseInt(left);
     this.top = parseInt(top);
-    this.text = text;
-    this.fontsize = parseInt(fontsize);
-    this.color = color;
+    this.text = content;
+    this.fontsize = parseInt(size);
+    this.color = color_picker;
     this.alpha = alpha;
     this.margin = parseInt(margin);
-    this.margin_color = margin_color;
+    this.margin_color = margin_color_picker;
     this.margin_alpha = margin_alpha;
   }
 
@@ -234,17 +323,19 @@ class CanvasText {
 class CanvasImage {
   image = new Image();
 
-  constructor(ctx, imageLoaded, left, top, scale) {
+  constructor(ctx, imageLoaded, imageControlCard) {
 
     this.image.onload = function () {
       console.log("image loaded");
     }
 
+    const { left, top, scale } = imageControlCard.elements;
+
     this.ctx = ctx;
     this.image.src = imageLoaded;
     this.left = parseInt(left);
     this.top = parseInt(top);
-    this.scale = scale;
+    this.scale = Math.pow(Math.exp(1), scale);
 
     this.width = this.image.width;
     this.height = this.image.height;
@@ -261,8 +352,6 @@ class CanvasImage {
   }
 }
 
-var captions = [];
-
 function doRender() {
   canvas.width = background.width;
   canvas.height = background.height;
@@ -272,15 +361,15 @@ function doRender() {
   captions = [];
   captions.push({
     name: "topic",
-    drawable: new CanvasText(ctx, h1.elements.left, h1.elements.top, h1.elements.content, h1.elements.size, h1.elements.color_picker, h1.elements.alpha, h1.elements.margin, h1.elements.margin_color_picker, h1.elements.margin_alpha)
+    drawable: new CanvasText(ctx, h1)
   });
   captions.push({
     name: "subject",
-    drawable: new CanvasText(ctx, h2.elements.left, h2.elements.top, h2.elements.content, h2.elements.size, h2.elements.color_picker, h2.elements.alpha, h2.elements.margin, h2.elements.margin_color_picker, h2.elements.margin_alpha)
+    drawable: new CanvasText(ctx, h2)
   });
   captions.push({
     name: "logo",
-    drawable: new CanvasImage(ctx, "./logo.png", logo_left.value, logo_top.value, Math.pow(Math.exp(1), logo_scale.value))
+    drawable: new CanvasImage(ctx, "./logo.png", logo)
   });
 
   captions.forEach((element) => element.drawable.draw());
@@ -289,29 +378,33 @@ function doRender() {
 function initialLoad(e) {
   captions = [];
   {
-    logo_left.value = Math.round(background.height * 0.05);
-    logo_top.value = Math.round(background.height * 0.078);
+    let logo_temp = {
+      left: Math.round(background.height * 0.05),
+      top: Math.round(background.height * 0.078)
+    };
 
-    let h1_temp = {};
-    let h2_temp = {};
+    
+    let h1_temp = {
+      top_max: background.height,
+      left_max: background.width,
+      suggested_size: Math.round(background.height * 0.196),
+      top: Math.round(background.height * 0.5465)
+    };
 
-    h1_temp.top_max = background.height;
-    h1_temp.left_max = background.width;
-    h2_temp.top_max = background.height;
-    h2_temp.left_max = background.width;
-
-    h1_temp.suggested_size = Math.round(background.height * 0.196);
-    h2_temp.suggested_size = Math.round(h1_temp.suggested_size * 0.625);
+    let h2_temp = {
+      top_max: background.height,
+      left_max: background.width,
+      suggested_size: Math.round(h1_temp.suggested_size * 0.625),
+      top: Math.round(h1_temp.top * 1.36)
+    };
 
     h1_temp.size = h1_temp.suggested_size;
     h2_temp.size = h2_temp.suggested_size;
 
-    h1_temp.top = Math.round(background.height * 0.5465);
-    h2_temp.top = Math.round(h1_temp.top * 1.36);
-
     h1_temp.top_range = h1_temp.top;
     h2_temp.top_range = h2_temp.top;
 
+    logo.elements = Object.assign(logo.elements, logo_temp);
     h1.elements = Object.assign(h1.elements, h1_temp);
     h2.elements = Object.assign(h2.elements, h2_temp);
 
@@ -348,7 +441,7 @@ function changeCanvasCtxScale(event) {
 
 function downloadCanvas(event) {
   var dataUrl = canvas.toDataURL("image/png");
-  var fileName = h2.value.concat("_", h1.value).toLowerCase().replace(/[\W_]+/g, "_");
+  var fileName = h2.elements.content.concat("_", h1.elements.content).toLowerCase().replace(/[\W_]+/g, "_");
   event.target.download = fileName.concat(".png");
   this.href = dataUrl.replace(/^data:image\/[^;]/, "data:application/octet-stream");
 }
@@ -388,53 +481,3 @@ function displayColor(mouseEvent) {
 
   canvas.removeEventListener("click", displayColor, false);
 }
-
-let isActive = false;  // Track if mouse is held down
-let center = { x: 100, y: 100 };  // Assuming a fixed-size 200x200 area for simplicity
-let lastPosition = { x: 100, y: 100 };  // Cache the last mouse position
-
-document.getElementById('trackpointArea').addEventListener('mousedown', function (e) {
-  isActive = true;  // Enable movement tracking
-  updateLastPosition(e);  // Update position initially on mouse down
-});
-
-document.getElementById('trackpointArea').addEventListener('mouseup', function () {
-  isActive = false;  // Disable movement tracking
-});
-
-document.getElementById('trackpointArea').addEventListener('mouseleave', function () {
-  isActive = false;  // Disable movement if leaves the area
-});
-
-document.getElementById('trackpointArea').addEventListener('mousemove', function (e) {
-  if (isActive) {
-    updateLastPosition(e);
-    updateCoordinates();
-  }
-});
-
-function updateLastPosition(e) {
-  var rect = e.target.getBoundingClientRect();
-  lastPosition.x = e.clientX - rect.left;
-  lastPosition.y = e.clientY - rect.top;
-}
-
-function updateCoordinates() {
-  const sensitivity = 0.1;  // Control how sensitive the movement is
-  let dx = Math.round((lastPosition.x - center.x) * sensitivity);
-  let dy = Math.round((lastPosition.y - center.y) * sensitivity);
-
-  let currentX = parseInt(document.getElementById('logo_left').value || center.x);
-  let currentY = parseInt(document.getElementById('logo_top').value || center.y);
-
-  document.getElementById('logo_left').value = currentX + dx;
-  document.getElementById('logo_top').value = currentY + dy;
-}
-
-// Continually update the position if the mouse is down
-setInterval(function () {
-  if (isActive) {
-    updateCoordinates();
-    doRender();
-  }
-}, 50);  // Update frequency in milliseconds
