@@ -54,7 +54,7 @@
                 grid-area: 1 / 2 / 2 / 3;
             }
         </style>
-        <fieldset class="control">
+        <fieldset class="control" class="id_preffix">
             <legend class="legend"></legend>
             <div class="parent">
                 <div class="top_position"><input type="range" class="top_range" min="0" value="0">
@@ -65,6 +65,7 @@
                     <div class="text">
                         <input id="_text" class="content"><br>
                         <div class="teko">Teko font</div>
+                        <input type="range" class="alpha" min="0" value="1" max="1" step="0.05">
                         <div>
                             <input type="color" class="color_picker" id="_color" value="#ffffff" />&nbsp;
                             <div class="picker" style="background: #F0FFFF"></div>
@@ -82,6 +83,7 @@
                     <div class="margin">
                         <label>margin:<input class="margin" id="_margin" value="20" type="number" min="-1"
                                 size="5"></label><br>
+                        <input type="range" class="margin_alpha" min="0" value="0.9" max="1" step="0.05">
                         <div>
                             <input type="color" class="margin_color_picker" id="_margin_color" value="#00003F" />
                             <div class="picker" style="background: #3F0000"></div>
