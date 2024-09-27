@@ -1,3 +1,5 @@
+//import logoImageLoaded from "./logo.png";
+
 var imageLoader = document.getElementById("imageLoader");
 imageLoader.addEventListener("change", handleImage, false);
 
@@ -36,6 +38,7 @@ class ControlCard extends HTMLElement {
   onInputChange(event) {
     const inputId = event.target.className;
     const value = event.target.value;
+    event.target.setAttribute("value", value);
     this.setAttribute(inputId, value);
     doRender();
   }
@@ -45,7 +48,7 @@ class ControlCard extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['id_preffix', 'legend', 'content', 'color_picker', 'size', 'suggested_size', 'margin_color_picker', 'margin', 'left', 'top', 'left_range', 'top_range', 'left_max', 'top_max',];
+    return ['id_preffix', 'legend', 'content', 'color_picker', 'size', 'alpha', 'suggested_size', 'margin_color_picker', 'margin_alpha', 'margin', 'left', 'top', 'left_range', 'top_range', 'left_max', 'top_max',];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -69,8 +72,8 @@ class ControlCard extends HTMLElement {
         this.margin.value = newValue;
         break;
       case 'left_max':
-        this.left.max = newValue;
-        this.left_range.max = newValue;
+        this.left.setAttribute("max", newValue);
+        this.left_range.setAttribute("max", newValue);
         break;
       case 'top_max':
         this.top.max = newValue;
@@ -78,28 +81,42 @@ class ControlCard extends HTMLElement {
         break;
       case 'left':
       case 'left_range':
-        this.left.value = `${newValue}`;
-        this.left_range.value = `${newValue}`;
+        this.left.setAttribute("value", newValue);
+        this.left_range.setAttribute("value", newValue);
+
+        this.left.value = newValue;
+        this.left_range.value = newValue;
+
         if (!(this.getAttribute("left") === this.getAttribute("left_range"))) {
-          this.setAttribute(["left", "left_range"].filter(e => e !== name), `${newValue}`);
+          this.setAttribute(["left", "left_range"].filter(e => e !== name), newValue);
         }
         break;
       case 'top':
       case 'top_range':
-        this.top.value = `${newValue}`;
-        this.top_range.value = `${newValue}`;
+        this.top.setAttribute("value", newValue);
+        this.top_range.setAttribute("value", newValue);
+
+        this.top.value = newValue;
+        this.top_range.value = newValue;
+
         if (!(this.getAttribute("top") === this.getAttribute("top_range"))) {
-          this.setAttribute(["top", "top_range"].filter(e => e !== name), `${newValue}`);
+          this.setAttribute(["top", "top_range"].filter(e => e !== name), newValue);
         }
         break;
       case 'color_picker':
-        this.color_picker.value = `${newValue}`;
+        this.color_picker.value = newValue;
         break;
       case 'margin_color_picker':
-        this.margin_color_picker.value = `${newValue}`;
+        this.margin_color_picker.value = newValue;
+        break;
+      case 'margin_alpha':
+        this.margin_alpha.value = newValue;
+        break;
+      case 'alpha':
+        this.alpha.value = newValue;
         break;
       case 'suggested_size':
-        this.suggested_size.textContent = `${newValue}`;
+        this.suggested_size.textContent = newValue;
         this.suggested_size.setAttribute('title',
           ControlCard.fillTemplate(
             this.suggested_size.getAttribute('data-title'),
@@ -137,14 +154,18 @@ h1.elements = {
   legend: 'H1',
   content: 'Lora IoTipsum',
   color_picker: '#ffffff',
+  alpha: 1,
   size: 48,
   suggested_size: '8.5%',
   margin: 20,
+  margin_alpha: 0.9,
   margin_color_picker: "#00003F",
   left: 0,
   top: 0,
   left_range: 0,
   top_range: 0,
+  left_max: Number.MAX_SAFE_INTEGER,
+  top_max: Number.MAX_SAFE_INTEGER,
 };
 app.appendChild(h1);
 
@@ -155,14 +176,18 @@ h2.elements = {
   legend: 'H2',
   content: 'IoTuesday',
   color_picker: '#ffffff',
+  alpha: 1,
   size: 48,
   suggested_size: '6%',
   margin: 15,
+  margin_alpha: 0.9,
   margin_color_picker: "#00003F",
   left: 0,
   top: 0,
   left_range: 0,
   top_range: 0,
+  left_max: Number.MAX_SAFE_INTEGER,
+  top_max: Number.MAX_SAFE_INTEGER,
 };
 app.appendChild(h2);
 
@@ -170,13 +195,14 @@ app.appendChild(h2);
 class CanvasText {
   static fontface = 'Teko';
 
-  constructor(ctx, left, top, text, fontsize, color, margin, margin_color, margin_alpha) {
+  constructor(ctx, left, top, text, fontsize, color, alpha, margin, margin_color, margin_alpha) {
     this.ctx = ctx;
     this.left = parseInt(left);
     this.top = parseInt(top);
     this.text = text;
     this.fontsize = parseInt(fontsize);
     this.color = color;
+    this.alpha = alpha;
     this.margin = parseInt(margin);
     this.margin_color = margin_color;
     this.margin_alpha = margin_alpha;
@@ -192,14 +218,16 @@ class CanvasText {
       var lineHeight = this.fontsize * 0.8;// * 1.286;
       var textWidth = ctx.measureText(this.text).width;
 
-      this.ctx.globalAlpha = this.margin_alpha; 
+      this.ctx.globalAlpha = this.margin_alpha;
       this.ctx.fillStyle = this.margin_color;
       this.ctx.fillRect(this.left - this.margin, this.top - this.margin, textWidth + this.margin * 2, lineHeight + this.margin * 2);
-      this.ctx.globalAlpha = 1; 
+      this.ctx.globalAlpha = 1;
     }
 
+    this.ctx.globalAlpha = this.alpha;
     this.ctx.fillStyle = this.color;
     this.ctx.fillText(this.text, this.left, this.top);
+    this.ctx.globalAlpha = 1;
   }
 }
 
@@ -207,6 +235,11 @@ class CanvasImage {
   image = new Image();
 
   constructor(ctx, imageLoaded, left, top, scale) {
+
+    this.image.onload = function () {
+      console.log("image loaded");
+    }
+
     this.ctx = ctx;
     this.image.src = imageLoaded;
     this.left = parseInt(left);
@@ -239,11 +272,11 @@ function doRender() {
   captions = [];
   captions.push({
     name: "topic",
-    drawable: new CanvasText(ctx, h1.elements.left, h1.elements.top, h1.elements.content, h1.elements.size, h1.elements.color_picker, h1.elements.margin, h1.elements.margin_color_picker, 0.9)
+    drawable: new CanvasText(ctx, h1.elements.left, h1.elements.top, h1.elements.content, h1.elements.size, h1.elements.color_picker, h1.elements.alpha, h1.elements.margin, h1.elements.margin_color_picker, h1.elements.margin_alpha)
   });
   captions.push({
     name: "subject",
-    drawable: new CanvasText(ctx, h2.elements.left, h2.elements.top, h2.elements.content, h2.elements.size, h2.elements.color_picker, h2.elements.margin, h2.elements.margin_color_picker, 0.9)
+    drawable: new CanvasText(ctx, h2.elements.left, h2.elements.top, h2.elements.content, h2.elements.size, h2.elements.color_picker, h2.elements.alpha, h2.elements.margin, h2.elements.margin_color_picker, h2.elements.margin_alpha)
   });
   captions.push({
     name: "logo",
