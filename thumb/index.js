@@ -245,7 +245,7 @@ function downloadCanvas(event) {
 }
 
 dl.addEventListener("click", downloadCanvas, false);
-reload.addEventListener("click", doRender, false);
+
 canvas_scale.addEventListener("input", changeCanvasCtxScale, false);
 
 document.querySelectorAll("input.scale").forEach(function (elem) {

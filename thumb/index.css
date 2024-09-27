@@ -1,6 +1,6 @@
 .parent {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 250px 1fr;
     grid-template-rows: 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
@@ -21,14 +21,6 @@
     border: 1px solid gray;
 }
 
-#trackpointArea {
-    width: 200px;
-    height: 200px;
-    border: 1px solid black;
-    position: relative;
-    background: radial-gradient(#e66465, #9198e5);
-}
-
 a {
     text-decoration: underline;
     cursor: pointer;
@@ -40,3 +32,9 @@ a {
     font-weight: 600;
     font-style: normal;
   }
+
+#dl {
+    background-color: #212121;
+    color: #FFFFFF;
+    font-size: x-large;
+}

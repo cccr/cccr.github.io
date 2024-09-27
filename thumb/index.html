@@ -43,10 +43,12 @@
             .label {
                 grid-row-start: 1;
                 text-align: center;
+                font-size: large;
             }
 
             .top_position {
                 grid-row-start: 2;
+                margin: 0 auto;
             }
 
             .top_position input[type=range] {
@@ -57,6 +59,7 @@
 
             .left_position {
                 grid-column-start: 2;
+                margin: auto 0;
             }
 
             .other_control {
@@ -66,7 +69,7 @@
         <fieldset class="control" class="id_preffix">
             <legend class="legend"></legend>
             <div class="parent">
-                <div class="label">&nbsp;&rarr;<br>&darr;</div>
+                <div class="label">&rarr;<br>&darr;</div>
                 <div class="top_position"><input type="range" class="top_range" min="0" value="0">
                 </div>
                 <div class="left_position"><input type="range" class="left_range" min="0" value="0">
@@ -115,13 +118,20 @@
             .parent {
                 display: grid;
                 grid-template-columns: 2rem 1fr;
-                grid-template-rows: 2rem 1fr;
+                grid-template-rows: 3rem 1fr;
                 grid-column-gap: 0px;
                 grid-row-gap: 0px;
             }
 
+            .label {
+                grid-row-start: 1;
+                text-align: center;
+                font-size: large;
+            }
+
             .top_position {
                 grid-row-start: 2;
+                margin: 0 auto;
             }
 
             .top_position input[type=range] {
@@ -132,6 +142,7 @@
 
             .left_position {
                 grid-column-start: 2;
+                margin: auto 0;
             }
 
             .other_control {
@@ -141,6 +152,7 @@
         <fieldset class="control" class="id_preffix">
             <legend class="legend"></legend>
             <div class="parent">
+                <div class="label">&rarr;<br>&darr;</div>
                 <div class="top_position"><input type="range" class="top_range" min="0" value="0">
                 </div>
                 <div class="left_position"><input type="range" class="left_range" min="0" value="0">
@@ -159,9 +171,9 @@
 
     <div class="controls" id="control_app">
         <input type="file" id="imageLoader" name="imageLoader" /><br />
-        <label>Canvas scale: <input type="range" id="canvas_scale" class="scale" min="-2" max="2" value="0" step="0.02">
+        <label>Canvas scale:<input type="range" id="canvas_scale" class="scale" min="-2" max="2" value="0" step="0.02">
         </label><br />
-        <div><a id="reload">Reload</a>&nbsp;|&nbsp;<a id="dl" download="Canvas.png">Download Canvas</a></div>
+        <div><a id="dl" download="Canvas.png">Download Canvas</a></div>
     </div>
     <div class="workspace">
         <canvas id="canvas"></canvas>
