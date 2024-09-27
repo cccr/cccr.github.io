@@ -379,6 +379,8 @@ function initialLoad(e) {
   captions = [];
   {
     let logo_temp = {
+      top_max: background.height,
+      left_max: background.width,
       left: Math.round(background.height * 0.05),
       top: Math.round(background.height * 0.078)
     };
