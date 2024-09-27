@@ -259,8 +259,8 @@ function initialLoad(e) {
     logo_left.value = Math.round(background.height * 0.05);
     logo_top.value = Math.round(background.height * 0.078);
 
-    h1_temp = {};
-    h2_temp = {};
+    let h1_temp = {};
+    let h2_temp = {};
 
     h1_temp.top_max = background.height;
     h1_temp.left_max = background.width;
