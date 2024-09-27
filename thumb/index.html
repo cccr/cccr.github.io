@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <script type="module" src="./index.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600&display=swap" rel="preload" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600&display=swap" rel="stylesheet">
+    <link href="./index.css" rel="stylesheet">
+</head>
+
+<body class="parent">
+    <template id="control-template">
+        <style>
+            .teko {
+                font-family: "Teko", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 600;
+                font-style: normal;
+            }
+
+            .picker {
+                width: 1rem;
+                height: 1rem;
+                display: inline-block;
+                border: 1px solid gray;
+            }
+
+            .parent {
+                display: grid;
+                grid-template-columns: 2rem 1fr;
+                grid-template-rows: 1fr 2rem;
+                grid-column-gap: 0px;
+                grid-row-gap: 0px;
+            }
+
+            .top_position {
+                grid-area: 1 / 1 / 2 / 2;
+            }
+
+            .top_position input[type=range] {
+                writing-mode: vertical-lr;
+                direction: ltr;
+                vertical-align: middle;
+            }
+
+            .left_position {
+                grid-area: 2 / 3 / 2 / 2;
+            }
+
+            .other_control {
+                grid-area: 1 / 2 / 2 / 3;
+            }
+        </style>
+        <fieldset class="control">
+            <legend class="legend"></legend>
+            <div class="parent">
+                <div class="top_position"><input type="range" class="top_range" min="0" value="0">
+                </div>
+                <div class="left_position"><input type="range" class="left_range" min="0" value="0">
+                </div>
+                <div class="other_control">
+                    <div class="text">
+                        <input id="_text" class="content"><br>
+                        <div class="teko">Teko font</div>
+                        <div>
+                            <input type="color" class="color_picker" id="_color" value="#ffffff" />&nbsp;
+                            <div class="picker" style="background: #F0FFFF"></div>
+                            <div class="picker" style="background: #FFFFF0"></div>
+                            <div class="picker" style="background: #FFF0FF"></div>
+                        </div>
+                        <label>size:<input id="_size" class="size" value="48" type="number" min="1" size="5">&nbsp;<abbr
+                                id="_suggested_size" class="suggested_size"
+                                data-title="suggested value based on image size: ${suggested_size} of image width">8.5%</abbr></label>
+                    </div>
+                    <div class="position">
+                        <label>left:<input class="left" id="_left" value="80" type="number" min="0" size="5"></label>
+                        <label>top:<input class="top" id="_top" value="400" type="number" min="0" size="5"></label>
+                    </div>
+                    <div class="margin">
+                        <label>margin:<input class="margin" id="_margin" value="20" type="number" min="-1"
+                                size="5"></label><br>
+                        <div>
+                            <input type="color" class="margin_color_picker" id="_margin_color" value="#00003F" />
+                            <div class="picker" style="background: #3F0000"></div>
+                            <div class="picker" style="background: #003F00"></div>
+                            <div class="picker" style="background: #00003F"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </template>
+
+
+    <div class="controls" id="control_app">
+        <input type="file" id="imageLoader" name="imageLoader" /><br />
+        <label>Canvas scale: <input type="range" id="canvas_scale" class="scale" min="-2" max="2" value="0" step="0.02">
+        </label><br />
+        <fieldset class="control">
+            <legend>Logo</legend>
+            <label>scale:<input type="range" id="logo_scale" class="scale" min="-2" max="2" value="0"
+                    step="0.02"></label>
+            <div class="position">
+                <label>left:<input id="logo_left" value="80" type="number" min="0" size="5"></label>
+                <label>top:<input id="logo_top" value="400" type="number" min="0" size="5"></label>
+            </div>
+            <details>
+                <summary>Logo Position</summary>
+                <div id="trackpointArea"></div>
+            </details>
+        </fieldset>
+        <div><a id="reload">Reload</a>&nbsp;|&nbsp;<a id="dl" download="Canvas.png">Download Canvas</a></div>
+    </div>
+    <div class="workspace">
+        <canvas id="canvas"></canvas>
+    </div>
+</body>
+
+</html>
