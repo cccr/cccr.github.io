@@ -1,5 +1,8 @@
 //import logoImageLoaded from "./logo.png";
 
+import ImageControlCard from './image_control_card.js';
+import TextControlCard from './text_control_card.js';
+
 var imageLoader = document.getElementById("imageLoader");
 imageLoader.addEventListener("change", handleImage, false);
 
@@ -9,216 +12,6 @@ var background = new Image();
 var canvasScale = 1;
 
 var captions = [];
-
-class BaseControl extends HTMLElement {
-  constructor() {
-    super();
-  }
-
-  setupTemplate(templateId) {
-    this.attachShadow({ mode: 'open' });
-    const template = document.getElementById(templateId);
-    const templateContent = template.content.cloneNode(true);
-    this.shadowRoot.appendChild(templateContent);
-  }
-
-  connectedCallback() {
-    this.shadowRoot.querySelectorAll('input').forEach(input => {
-      input.addEventListener('input', this.onInputChange);
-    });
-  }
-
-  disconnectedCallback() {
-    this.shadowRoot.querySelectorAll('input').forEach(input => {
-      input.removeEventListener('input', this.onInputChange);
-    });
-  }
-
-  onInputChange(event) {
-    const inputId = event.target.className;
-    const value = event.target.value;
-    event.target.setAttribute("value", value);
-    this.setAttribute(inputId, value);
-    doRender();
-  }
-
-  set elements(data) {
-    for (let key in data) {
-      if (data.hasOwnProperty(key)) {
-        this.setAttribute(key, data[key]);
-      }
-    }
-  }
-
-  getObservedAttributes() {
-    return this.constructor.observedAttributes;
-  }
-
-  get elements() {
-    const attributesData = {};
-    const observedAttributes = this.getObservedAttributes();
-    observedAttributes.forEach(attr => {
-      attributesData[attr] = this.getAttribute(attr);
-    });
-    return attributesData;
-  }
-
-  static fillTemplate(template, values) {
-    return new Function(...Object.keys(values), `return \`${template}\`;`)(...Object.values(values));
-  }
-}
-
-class TextControlCard extends BaseControl {
-  constructor() {
-    super();
-    this.setupTemplate('text-control-template');
-    TextControlCard.observedAttributes.forEach(attr => {
-      this[attr] = this.shadowRoot.querySelector(`.${attr}`);
-    });
-    this.onInputChange = this.onInputChange.bind(this);
-  }
-
-  static get observedAttributes() {
-    return ['legend', 'content', 'color_picker', 'size', 'alpha', 'suggested_size', 'margin_color_picker', 'margin_alpha', 'margin', 'left', 'top', 'left_range', 'top_range', 'left_max', 'top_max',];
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    switch (name) {
-      case 'legend':
-        this.legend.textContent = newValue;
-        break
-      case 'content':
-        this.content.value = newValue;
-        break;
-      case 'size':
-        this.size.value = newValue;
-        break;
-      case 'margin':
-        this.margin.value = newValue;
-        break;
-      case 'left_max':
-        this.left.setAttribute("max", newValue);
-        this.left_range.setAttribute("max", newValue);
-        break;
-      case 'top_max':
-        this.top.max = newValue;
-        this.top_range.max = newValue;
-        break;
-      case 'left':
-      case 'left_range':
-        this.left.setAttribute("value", newValue);
-        this.left_range.setAttribute("value", newValue);
-
-        this.left.value = newValue;
-        this.left_range.value = newValue;
-
-        if (!(this.getAttribute("left") === this.getAttribute("left_range"))) {
-          this.setAttribute(["left", "left_range"].filter(e => e !== name), newValue);
-        }
-        break;
-      case 'top':
-      case 'top_range':
-        this.top.setAttribute("value", newValue);
-        this.top_range.setAttribute("value", newValue);
-
-        this.top.value = newValue;
-        this.top_range.value = newValue;
-
-        if (!(this.getAttribute("top") === this.getAttribute("top_range"))) {
-          this.setAttribute(["top", "top_range"].filter(e => e !== name), newValue);
-        }
-        break;
-      case 'color_picker':
-        this.color_picker.value = newValue;
-        break;
-      case 'margin_color_picker':
-        this.margin_color_picker.value = newValue;
-        break;
-      case 'margin_alpha':
-        this.margin_alpha.value = newValue;
-        break;
-      case 'alpha':
-        this.alpha.value = newValue;
-        break;
-      case 'suggested_size':
-        this.suggested_size.textContent = newValue;
-        this.suggested_size.setAttribute('title',
-          BaseControl.fillTemplate(
-            this.suggested_size.getAttribute('data-title'),
-            { suggested_size: `${newValue}` }
-          )
-        );
-        break
-      default:
-    }
-  }
-}
-
-class ImageControlCard extends BaseControl {
-  constructor() {
-    super();
-    this.setupTemplate('image-control-template');
-    ImageControlCard.observedAttributes.forEach(attr => {
-      this[attr] = this.shadowRoot.querySelector(`.${attr}`);
-    });
-    this.onInputChange = this.onInputChange.bind(this);
-  }
-
-  static fillTemplate(template, values) {
-    return new Function(...Object.keys(values), `return \`${template}\`;`)(...Object.values(values));
-  }
-
-  static get observedAttributes() {
-    return ['legend', 'scale', 'left', 'top', 'left_range', 'top_range', 'left_max', 'top_max',];
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    switch (name) {
-      case 'legend':
-        this.legend.textContent = newValue;
-        break
-      case 'scale':
-        this.scale.value = newValue;
-        break;
-      case 'left_max':
-        this.left.setAttribute("max", newValue);
-        this.left_range.setAttribute("max", newValue);
-        break;
-      case 'top_max':
-        this.top.max = newValue;
-        this.top_range.max = newValue;
-        break;
-      case 'left':
-      case 'left_range':
-        this.left.setAttribute("value", newValue);
-        this.left_range.setAttribute("value", newValue);
-
-        this.left.value = newValue;
-        this.left_range.value = newValue;
-
-        if (!(this.getAttribute("left") === this.getAttribute("left_range"))) {
-          this.setAttribute(["left", "left_range"].filter(e => e !== name), newValue);
-        }
-        break;
-      case 'top':
-      case 'top_range':
-        this.top.setAttribute("value", newValue);
-        this.top_range.setAttribute("value", newValue);
-
-        this.top.value = newValue;
-        this.top_range.value = newValue;
-
-        if (!(this.getAttribute("top") === this.getAttribute("top_range"))) {
-          this.setAttribute(["top", "top_range"].filter(e => e !== name), newValue);
-        }
-        break;
-      default:
-    }
-  }
-}
-
-customElements.define('text-control-card', TextControlCard);
-customElements.define('image-control-card', ImageControlCard);
 
 const app = document.getElementById('control_app');
 
@@ -234,6 +27,8 @@ logo.elements = {
   left_max: Number.MAX_SAFE_INTEGER,
   top_max: Number.MAX_SAFE_INTEGER,
 };
+logo.addEventListener('valueChanged', doRender);
+
 app.appendChild(logo);
 
 const h1 = document.createElement('text-control-card');
@@ -255,6 +50,7 @@ h1.elements = {
   left_max: Number.MAX_SAFE_INTEGER,
   top_max: Number.MAX_SAFE_INTEGER,
 };
+h1.addEventListener('valueChanged', doRender);
 app.appendChild(h1);
 
 const h2 = document.createElement('text-control-card');
@@ -276,6 +72,7 @@ h2.elements = {
   left_max: Number.MAX_SAFE_INTEGER,
   top_max: Number.MAX_SAFE_INTEGER,
 };
+h2.addEventListener('valueChanged', doRender);
 app.appendChild(h2);
 
 class CanvasText {
@@ -385,7 +182,6 @@ function initialLoad(e) {
       top: Math.round(background.height * 0.078)
     };
 
-    
     let h1_temp = {
       top_max: background.height,
       left_max: background.width,
@@ -454,14 +250,6 @@ canvas_scale.addEventListener("input", changeCanvasCtxScale, false);
 
 document.querySelectorAll("input.scale").forEach(function (elem) {
   elem.addEventListener("dblclick", function () { this.value = 0; this.dispatchEvent(new Event("input")); }, false);
-});
-
-document.querySelectorAll("div.control input").forEach(function (elem) {
-  elem.addEventListener("input", doRender, false);
-});
-
-document.querySelectorAll("fieldset.control input").forEach(function (elem) {
-  elem.addEventListener("input", doRender, false);
 });
 
 document.querySelectorAll("fieldset.control abbr").forEach(function (elem) {
