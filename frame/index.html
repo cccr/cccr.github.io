@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Field of View Calculator</title>
+  <style>
+    body { font-family: sans-serif; margin: 2em; max-width: 600px; }
+    input { width: 100px; margin: 0.5em; }
+    label { display: inline-block; width: 150px; }
+    #result { margin-top: 1em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Field of View Calculator</h2>
+
+  <label>Focal length (mm):</label>
+  <input type="number" id="focal" value="50"><br>
+
+  <label>Sensor width (mm):</label>
+  <input type="number" id="sensorWidth" value="36"><br>
+
+  <label>Sensor height (mm):</label>
+  <input type="number" id="sensorHeight" value="24"><br>
+
+  <label>Distance to subject (m):</label>
+  <input type="number" id="distance" value="5"><br>
+
+  <button onclick="calculateFOV()">Calculate</button>
+
+  <div id="result"></div>
+
+  <script>
+    function calculateFOV() {
+      const f = parseFloat(document.getElementById('focal').value);
+      const sw = parseFloat(document.getElementById('sensorWidth').value);
+      const sh = parseFloat(document.getElementById('sensorHeight').value);
+      const d = parseFloat(document.getElementById('distance').value);
+
+      const hfov = 2 * d * Math.tan((Math.atan(sw / (2 * f))));
+      const vfov = 2 * d * Math.tan((Math.atan(sh / (2 * f))));
+      const dfov = 2 * d * Math.tan((Math.atan(Math.sqrt(sw**2 + sh**2) / (2 * f))));
+
+      document.getElementById('result').innerHTML =
+        `Horizontal FOV: ${hfov.toFixed(2)} m<br>` +
+        `Vertical FOV: ${vfov.toFixed(2)} m<br>` +
+        `Diagonal FOV: ${dfov.toFixed(2)} m`;
+    }
+  </script>
+</body>
+</html>
