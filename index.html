@@ -1,14 +1,373 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>title</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>License Center Queue Predictor</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        --bg: #f6f7fb;
+        --card: #ffffff;
+        --text: #16202a;
+        --muted: #5b6b7a;
+        --primary: #2351dc;
+        --secondary: #e6eaf2;
+        --accent: #0b8a6a;
+        --danger: #c0392b;
+        --shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+      }
+
+      body {
+        margin: 0;
+        padding: 40px 16px 80px;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      header {
+        margin-bottom: 32px;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: 2.2rem;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-top: 28px;
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid #d5dbe7;
+        font-size: 1rem;
+        text-transform: uppercase;
+      }
+
+      input:focus {
+        outline: 2px solid rgba(35, 81, 220, 0.3);
+        border-color: var(--primary);
+      }
+
+      .hint {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+
+      .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      button {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 18px;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
+      }
+
+      .primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .secondary {
+        background: var(--secondary);
+        color: var(--text);
+      }
+
+      .status {
+        margin-top: 16px;
+        background: #f1f5ff;
+        border-radius: 12px;
+        padding: 14px 16px;
+        color: var(--text);
+      }
+
+      .result {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin: 0 0 8px;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .warning {
+        color: var(--danger);
+        font-weight: 600;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+      }
+
+      .metric {
+        background: #f9fafc;
+        border-radius: 12px;
+        padding: 12px 14px;
+        border: 1px solid #e4e9f2;
+      }
+
+      .metric h3 {
+        margin: 0 0 6px;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      .metric p {
+        margin: 0;
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      footer {
+        margin-top: 32px;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+    </style>
   </head>
   <body>
-<ul>
-<li>
-<a href="/col/index.html">COL</a>
-</li>
-</ul>
+    <div class="container">
+      <header>
+        <h1>Driving License Center Queue Predictor</h1>
+        <p>
+          Enter your number (for example <strong>I044</strong>) and the current queued number for your
+          letter. Tap the buttons whenever a number is called so the system can predict your wait
+          time.
+        </p>
+      </header>
+
+      <div class="grid">
+        <div class="card">
+          <label for="user-number">Your number</label>
+          <input id="user-number" type="text" placeholder="I044" maxlength="4" />
+          <div class="hint">Use the capital letter + three digits.</div>
+        </div>
+
+        <div class="card">
+          <label for="current-number">Current queued number (same letter)</label>
+          <input id="current-number" type="text" placeholder="I020" maxlength="4" />
+          <div class="hint">Update this if the display changes manually.</div>
+        </div>
+
+        <div class="card">
+          <label>Call buttons</label>
+          <div class="buttons">
+            <button id="letter-call" class="primary" type="button">I called</button>
+            <button id="other-call" class="secondary" type="button">Other call</button>
+          </div>
+          <div class="hint">Tap when you hear a call. The average time per call updates.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 24px;">
+        <div class="status">
+          <p class="result" id="prediction">Enter numbers to see your prediction.</p>
+          <p class="muted" id="prediction-detail"></p>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <h3>Average time per call</h3>
+            <p id="avg-time">--</p>
+          </div>
+          <div class="metric">
+            <h3>Calls tracked</h3>
+            <p id="calls-count">0</p>
+          </div>
+          <div class="metric">
+            <h3>Next expected time</h3>
+            <p id="expected-time">--</p>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          Tip: Click “I called” when your letter is announced, and “Other call” for any other
+          letter. The prediction improves as more calls are logged.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const userNumberInput = document.getElementById("user-number");
+      const currentNumberInput = document.getElementById("current-number");
+      const letterCallButton = document.getElementById("letter-call");
+      const otherCallButton = document.getElementById("other-call");
+      const prediction = document.getElementById("prediction");
+      const predictionDetail = document.getElementById("prediction-detail");
+      const avgTimeEl = document.getElementById("avg-time");
+      const callsCountEl = document.getElementById("calls-count");
+      const expectedTimeEl = document.getElementById("expected-time");
+
+      const callHistory = [];
+      let currentQueuedValue = null;
+
+      const normalizeNumber = (value) => value.trim().toUpperCase();
+      const parseNumber = (value) => {
+        const normalized = normalizeNumber(value);
+        const match = normalized.match(/^([A-Z])(\d{3})$/);
+        if (!match) return null;
+        return { letter: match[1], number: Number(match[2]) };
+      };
+
+      const updateLetterButton = () => {
+        const userParsed = parseNumber(userNumberInput.value);
+        letterCallButton.textContent = userParsed
+          ? `${userParsed.letter} called`
+          : "Letter called";
+      };
+
+      const pushCall = (type) => {
+        const timestamp = Date.now();
+        callHistory.push({ type, timestamp });
+        callsCountEl.textContent = String(callHistory.length);
+        if (callHistory.length > 1) {
+          updateAverage();
+        }
+        updatePrediction();
+      };
+
+      const updateAverage = () => {
+        if (callHistory.length < 2) return;
+        let totalGap = 0;
+        for (let i = 1; i < callHistory.length; i += 1) {
+          totalGap += callHistory[i].timestamp - callHistory[i - 1].timestamp;
+        }
+        const avgMs = totalGap / (callHistory.length - 1);
+        avgTimeEl.textContent = `${Math.round(avgMs / 60000)} min`;
+      };
+
+      const formatTime = (date) => {
+        return new Intl.DateTimeFormat("en", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(date);
+      };
+
+      const updatePrediction = () => {
+        const userParsed = parseNumber(userNumberInput.value);
+        const currentParsed = parseNumber(currentNumberInput.value);
+
+        if (!userParsed || !currentParsed) {
+          prediction.textContent = "Enter numbers to see your prediction.";
+          predictionDetail.textContent = "";
+          expectedTimeEl.textContent = "--";
+          return;
+        }
+
+        if (userParsed.letter !== currentParsed.letter) {
+          prediction.innerHTML =
+            "<span class=\"warning\">Letters must match.</span>";
+          predictionDetail.textContent = "";
+          expectedTimeEl.textContent = "--";
+          return;
+        }
+
+        currentQueuedValue = currentParsed.number;
+        const remainingCalls = userParsed.number - currentQueuedValue;
+
+        if (remainingCalls <= 0) {
+          prediction.textContent = "Your number should already be called or is next.";
+          predictionDetail.textContent = "";
+          expectedTimeEl.textContent = "Now";
+          return;
+        }
+
+        if (callHistory.length < 2) {
+          prediction.textContent = "Log a few calls to estimate your time.";
+          predictionDetail.textContent =
+            `You are ${remainingCalls} calls away. Tap buttons to learn the pace.`;
+          expectedTimeEl.textContent = "--";
+          return;
+        }
+
+        let totalGap = 0;
+        for (let i = 1; i < callHistory.length; i += 1) {
+          totalGap += callHistory[i].timestamp - callHistory[i - 1].timestamp;
+        }
+        const avgMs = totalGap / (callHistory.length - 1);
+        const estimatedMs = remainingCalls * avgMs;
+        const eta = new Date(Date.now() + estimatedMs);
+
+        prediction.textContent = `Estimated wait: ${Math.round(estimatedMs / 60000)} minutes.`;
+        predictionDetail.textContent = `Approximately ${remainingCalls} calls remain.`;
+        expectedTimeEl.textContent = formatTime(eta);
+      };
+
+      userNumberInput.addEventListener("input", () => {
+        updateLetterButton();
+        updatePrediction();
+      });
+
+      currentNumberInput.addEventListener("input", updatePrediction);
+
+      letterCallButton.addEventListener("click", () => {
+        const currentParsed = parseNumber(currentNumberInput.value);
+        if (currentParsed) {
+          currentParsed.number += 1;
+          currentNumberInput.value = `${currentParsed.letter}${String(
+            currentParsed.number
+          ).padStart(3, "0")}`;
+        }
+        pushCall("letter");
+      });
+
+      otherCallButton.addEventListener("click", () => {
+        pushCall("other");
+      });
+
+      updateLetterButton();
+      updatePrediction();
+    </script>
   </body>
 </html>
